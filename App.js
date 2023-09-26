@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
 import { RegistationScreen } from './Components/RegistrationScreen';
+import { LoginScreen } from './Components/LoginScreen';
 
 const logoImg = require('./assets/adaptive-icon.png');
 
@@ -20,6 +21,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <RegistationScreen />
+      {/* <LoginScreen /> */}
       <StatusBar />
     </View>
   );
@@ -28,9 +30,5 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // fontFamily: 'Roboto-Regular',
-    // fontSize: 16,
-    // fontStyle: 'normal',
-    // color: '#212121',
   },
 });
