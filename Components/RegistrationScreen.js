@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import Plus from '../assets/svg/plus.svg';
 import Cross from '../assets/svg/cross.svg';
@@ -15,104 +17,139 @@ const avatarPhoto = require('../assets/images/avatar-photo.png');
 
 export const RegistationScreen = () => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
-
-  const handleFocus = () => {
-    setIsFocused(true);
-    setIsShowKeyboard(true);
-  };
-
-  const handleBlur = () => {
-    setIsFocused(false);
-  };
-
-  const handleSubmitEditing = () => {
-    setIsShowKeyboard(false);
-  };
+  const [isFocused, setIsFocused] = useState({
+    userName: false,
+    email: false,
+    password: false,
+  });
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={-170}
-      style={styles.container}
-    >
-      <ImageBackground
-        source={background}
-        style={{
-          ...styles.background,
-          marginBottom: isShowKeyboard ? -100 : 0,
-        }}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={-190}
+        style={styles.container}
       >
-        <View
-          style={{ ...styles.wrapper, marginBottom: isShowKeyboard ? 100 : 0 }}
+        <ImageBackground
+          source={background}
+          style={{
+            ...styles.background,
+            marginBottom: isShowKeyboard ? -100 : 0,
+          }}
         >
-          <View style={styles.avatar}>
-            <View style={styles.avatarIcon}>
-              <Plus width={13} height={13} fill={'#FF6C00'} />
+          <View
+            style={{
+              ...styles.wrapper,
+              marginBottom: isShowKeyboard ? 100 : 0,
+            }}
+          >
+            <View style={styles.avatar}>
+              <View style={styles.avatarIcon}>
+                <Plus width={13} height={13} fill={'#FF6C00'} />
+              </View>
             </View>
-          </View>
 
-          {/* With avatar photo  */}
-          {/* <ImageBackground source={avatarPhoto} style={styles.avatar}>
+            {/* With avatar photo  */}
+            {/* <ImageBackground source={avatarPhoto} style={styles.avatar}>
             <View style={styles.avatarIconWithPhoto}>
               <Cross width={13} height={13} fill={'#BDBDBD'} />
             </View>
           </ImageBackground> */}
 
-          <Text style={styles.title}>Реєстрація</Text>
+            <Text style={styles.title}>Реєстрація</Text>
 
-          <View style={styles.form}>
-            <TextInput
-              style={{
-                ...styles.input,
-                backgroundColor: isFocused ? '#FFFFFF' : '#F6F6F6',
-                borderColor: isFocused ? '#FF6C00' : '#E8E8E8',
-              }}
-              placeholder="Логін"
-              placeholderTextColor={'#BDBDBD'}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              onSubmitEditing={handleSubmitEditing}
-            />
-            <TextInput
-              style={{
-                ...styles.input,
-                backgroundColor: isFocused ? '#FFFFFF' : '#F6F6F6',
-                borderColor: isFocused ? '#FF6C00' : '#E8E8E8',
-              }}
-              placeholder="Адреса електронної пошти"
-              placeholderTextColor={'#BDBDBD'}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              onSubmitEditing={handleSubmitEditing}
-            />
-            <TextInput
-              style={{
-                ...styles.input,
-                backgroundColor: isFocused ? '#FFFFFF' : '#F6F6F6',
-                borderColor: isFocused ? '#FF6C00' : '#E8E8E8',
-              }}
-              placeholder="Пароль"
-              placeholderTextColor={'#BDBDBD'}
-              secureTextEntry={true}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              onSubmitEditing={handleSubmitEditing}
-            />
-            <TouchableOpacity>
-              <Text style={styles.inputPassword}>Показати</Text>
+            <View style={styles.form}>
+              <TextInput
+                style={{
+                  ...styles.input,
+                  backgroundColor: isFocused.userName ? '#FFFFFF' : '#F6F6F6',
+                  borderColor: isFocused.userName ? '#FF6C00' : '#E8E8E8',
+                }}
+                placeholder="Логін"
+                placeholderTextColor={'#BDBDBD'}
+                onFocus={() => {
+                  setIsShowKeyboard(true),
+                    setIsFocused({
+                      ...isFocused,
+                      userName: true,
+                    });
+                }}
+                onBlur={() => {
+                  setIsFocused({
+                    ...isFocused,
+                    userName: false,
+                  });
+                }}
+                onSubmitEditing={() => {
+                  setIsShowKeyboard(false);
+                }}
+              />
+              <TextInput
+                style={{
+                  ...styles.input,
+                  backgroundColor: isFocused.email ? '#FFFFFF' : '#F6F6F6',
+                  borderColor: isFocused.email ? '#FF6C00' : '#E8E8E8',
+                }}
+                placeholder="Адреса електронної пошти"
+                placeholderTextColor={'#BDBDBD'}
+                onFocus={() => {
+                  setIsShowKeyboard(true),
+                    setIsFocused({
+                      ...isFocused,
+                      email: true,
+                    });
+                }}
+                onBlur={() => {
+                  setIsFocused({
+                    ...isFocused,
+                    email: false,
+                  });
+                }}
+                onSubmitEditing={() => {
+                  setIsShowKeyboard(false);
+                }}
+              />
+              <TextInput
+                style={{
+                  ...styles.input,
+                  backgroundColor: isFocused.password ? '#FFFFFF' : '#F6F6F6',
+                  borderColor: isFocused.password ? '#FF6C00' : '#E8E8E8',
+                }}
+                placeholder="Пароль"
+                placeholderTextColor={'#BDBDBD'}
+                secureTextEntry={true}
+                onFocus={() => {
+                  setIsShowKeyboard(true),
+                    setIsFocused({
+                      ...isFocused,
+                      password: true,
+                    });
+                }}
+                onBlur={() => {
+                  setIsFocused({
+                    ...isFocused,
+                    password: false,
+                  });
+                }}
+                onSubmitEditing={() => {
+                  setIsShowKeyboard(false);
+                }}
+              />
+              <TouchableOpacity>
+                <Text style={styles.inputPassword}>Показати</Text>
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+              <Text style={styles.buttonText}>Зареєстуватися</Text>
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.8}>
+              <Text style={styles.text}>Вже є акаунт? Увійти</Text>
             </TouchableOpacity>
           </View>
-
-          <TouchableOpacity style={styles.button} activeOpacity={0.8}>
-            <Text style={styles.buttonText}>Зареєстуватися</Text>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8}>
-            <Text style={styles.text}>Вже є акаунт? Увійти</Text>
-          </TouchableOpacity>
-        </View>
-      </ImageBackground>
-    </KeyboardAvoidingView>
+        </ImageBackground>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 
