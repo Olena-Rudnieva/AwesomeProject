@@ -202,9 +202,10 @@ const styles = StyleSheet.create({
   },
   form: {
     width: 343,
+    height: 182,
     position: 'relative',
     gap: 16,
-    marginBottom: 27,
+    marginBottom: 43,
   },
   input: {
     width: '100%',
