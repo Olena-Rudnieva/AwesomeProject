@@ -1,0 +1,13 @@
+ <svg     
+      width="13"
+      height="13"
+      fill="none"
+      viewBox="0 0 13 13"
+    >
+      <path        
+        fillRule="evenodd"
+        d=" M7 0H6v6H0v1h6v6h1V7h6V6H7V0z"
+        clipRule="evenodd"
+        fill="#000"
+      ></path>
+    </svg>
