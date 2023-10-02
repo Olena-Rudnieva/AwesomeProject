@@ -23,6 +23,15 @@ export const RegistationScreen = () => {
     password: false,
   });
 
+  const handleFocus = (inputName) => {
+    setIsShowKeyboard(true);
+    setIsFocused({ [inputName]: true });
+  };
+  const handleBlur = (inputName) => {
+    setIsFocused({ [inputName]: false });
+  };
+  const handleSubmitEditing = () => setIsShowKeyboard(false);
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
@@ -68,21 +77,12 @@ export const RegistationScreen = () => {
                 placeholder="Логін"
                 placeholderTextColor={'#BDBDBD'}
                 onFocus={() => {
-                  setIsShowKeyboard(true),
-                    setIsFocused({
-                      ...isFocused,
-                      userName: true,
-                    });
+                  handleFocus('userName');
                 }}
                 onBlur={() => {
-                  setIsFocused({
-                    ...isFocused,
-                    userName: false,
-                  });
+                  handleBlur('userName');
                 }}
-                onSubmitEditing={() => {
-                  setIsShowKeyboard(false);
-                }}
+                onSubmitEditing={handleSubmitEditing}
               />
               <TextInput
                 style={{
@@ -93,21 +93,12 @@ export const RegistationScreen = () => {
                 placeholder="Адреса електронної пошти"
                 placeholderTextColor={'#BDBDBD'}
                 onFocus={() => {
-                  setIsShowKeyboard(true),
-                    setIsFocused({
-                      ...isFocused,
-                      email: true,
-                    });
+                  handleFocus('email');
                 }}
                 onBlur={() => {
-                  setIsFocused({
-                    ...isFocused,
-                    email: false,
-                  });
+                  handleBlur('email');
                 }}
-                onSubmitEditing={() => {
-                  setIsShowKeyboard(false);
-                }}
+                onSubmitEditing={handleSubmitEditing}
               />
               <TextInput
                 style={{
@@ -119,21 +110,12 @@ export const RegistationScreen = () => {
                 placeholderTextColor={'#BDBDBD'}
                 secureTextEntry={true}
                 onFocus={() => {
-                  setIsShowKeyboard(true),
-                    setIsFocused({
-                      ...isFocused,
-                      password: true,
-                    });
+                  handleFocus('password');
                 }}
                 onBlur={() => {
-                  setIsFocused({
-                    ...isFocused,
-                    password: false,
-                  });
+                  handleBlur('password');
                 }}
-                onSubmitEditing={() => {
-                  setIsShowKeyboard(false);
-                }}
+                onSubmitEditing={handleSubmitEditing}
               />
               <TouchableOpacity>
                 <Text style={styles.inputPassword}>Показати</Text>

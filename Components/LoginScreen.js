@@ -16,11 +16,20 @@ export const LoginScreen = () => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isFocused, setIsFocused] = useState({ email: false, password: false });
 
+  const handleFocus = (inputName) => {
+    setIsShowKeyboard(true);
+    setIsFocused({ [inputName]: true });
+  };
+  const handleBlur = (inputName) => {
+    setIsFocused({ [inputName]: false });
+  };
+  const handleSubmitEditing = () => setIsShowKeyboard(false);
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={-230}
+        keyboardVerticalOffset={-260}
         style={styles.container}
       >
         <ImageBackground
@@ -45,21 +54,12 @@ export const LoginScreen = () => {
                 placeholder="Адреса електронної пошти"
                 placeholderTextColor={'#BDBDBD'}
                 onFocus={() => {
-                  setIsShowKeyboard(true),
-                    setIsFocused({
-                      ...isFocused,
-                      email: true,
-                    });
+                  handleFocus('email');
                 }}
                 onBlur={() => {
-                  setIsFocused({
-                    ...isFocused,
-                    email: false,
-                  });
+                  handleBlur('email');
                 }}
-                onSubmitEditing={() => {
-                  setIsShowKeyboard(false);
-                }}
+                onSubmitEditing={handleSubmitEditing}
               />
               <TextInput
                 style={{
@@ -71,21 +71,12 @@ export const LoginScreen = () => {
                 placeholderTextColor={'#BDBDBD'}
                 secureTextEntry={true}
                 onFocus={() => {
-                  setIsShowKeyboard(true),
-                    setIsFocused({
-                      ...isFocused,
-                      password: true,
-                    });
+                  handleFocus('password');
                 }}
                 onBlur={() => {
-                  setIsFocused({
-                    ...isFocused,
-                    password: false,
-                  });
+                  handleBlur('password');
                 }}
-                onSubmitEditing={() => {
-                  setIsShowKeyboard(false);
-                }}
+                onSubmitEditing={handleSubmitEditing}
               />
               <TouchableOpacity>
                 <Text style={styles.inputPassword}>Показати</Text>
