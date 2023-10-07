@@ -15,6 +15,16 @@ const background = require('../assets/images/background.png');
 export const LoginScreen = () => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isFocused, setIsFocused] = useState({ email: false, password: false });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const onSubmitForm = () => {
+    console.log('email:', email);
+    console.log('password:', password);
+    setEmail('');
+    setPassword('');
+  };
 
   const handleFocus = (inputName) => {
     setIsShowKeyboard(true);
@@ -29,7 +39,7 @@ export const LoginScreen = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={-260}
+        keyboardVerticalOffset={-230}
         style={styles.container}
       >
         <ImageBackground
@@ -40,7 +50,10 @@ export const LoginScreen = () => {
           }}
         >
           <View
-            style={{ ...styles.wrapper, marginBottom: isShowKeyboard ? 45 : 0 }}
+            style={{
+              ...styles.wrapper,
+              paddingBottom: isShowKeyboard ? 170 : 144,
+            }}
           >
             <Text style={styles.title}>Увійти</Text>
 
@@ -53,6 +66,8 @@ export const LoginScreen = () => {
                 }}
                 placeholder="Адреса електронної пошти"
                 placeholderTextColor={'#BDBDBD'}
+                value={email}
+                onChangeText={setEmail}
                 onFocus={() => {
                   handleFocus('email');
                 }}
@@ -69,7 +84,9 @@ export const LoginScreen = () => {
                 }}
                 placeholder="Пароль"
                 placeholderTextColor={'#BDBDBD'}
-                secureTextEntry={true}
+                secureTextEntry={!isPasswordVisible}
+                value={password}
+                onChangeText={setPassword}
                 onFocus={() => {
                   handleFocus('password');
                 }}
@@ -78,12 +95,21 @@ export const LoginScreen = () => {
                 }}
                 onSubmitEditing={handleSubmitEditing}
               />
-              <TouchableOpacity>
-                <Text style={styles.inputPassword}>Показати</Text>
+              <TouchableOpacity
+                disabled={!password}
+                onPress={() => setIsPasswordVisible((prevState) => !prevState)}
+              >
+                <Text style={styles.inputPassword}>
+                  {isPasswordVisible ? 'Cховати' : 'Показати'}
+                </Text>
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+            <TouchableOpacity
+              style={styles.button}
+              activeOpacity={0.8}
+              onPress={onSubmitForm}
+            >
               <Text style={styles.buttonText}>Увійти</Text>
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.8}>
@@ -116,9 +142,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: '100%',
     paddingTop: 32,
-    paddingBottom: 144,
     paddingHorizontal: 16,
-    height: 489,
   },
 
   title: {
