@@ -9,19 +9,27 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Keyboard,
+  Image,
 } from 'react-native';
+import { Avatar } from '../Components/Avatar';
 const background = require('../assets/images/background.png');
 
-export const LoginScreen = () => {
+export const RegistationScreen = () => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [isFocused, setIsFocused] = useState({ email: false, password: false });
+  const [isFocused, setIsFocused] = useState({
+    userName: false,
+    email: false,
+    password: false,
+  });
+
+  const [login, setLogin] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const onSubmitForm = () => {
-    console.log('email:', email);
-    console.log('password:', password);
+    console.log({ login: login, email: email, password: password });
+    setLogin('');
     setEmail('');
     setPassword('');
   };
@@ -39,25 +47,45 @@ export const LoginScreen = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={-230}
+        keyboardVerticalOffset={-180}
         style={styles.container}
       >
         <ImageBackground
           source={background}
           style={{
             ...styles.background,
-            marginBottom: isShowKeyboard ? -45 : 0,
+            marginBottom: isShowKeyboard ? -100 : 0,
           }}
         >
           <View
             style={{
               ...styles.wrapper,
-              paddingBottom: isShowKeyboard ? 170 : 144,
+              paddingBottom: isShowKeyboard ? 160 : 78,
             }}
           >
-            <Text style={styles.title}>Увійти</Text>
+            <Avatar />
+
+            <Text style={styles.title}>Реєстрація</Text>
 
             <View style={styles.form}>
+              <TextInput
+                style={{
+                  ...styles.input,
+                  backgroundColor: isFocused.userName ? '#FFFFFF' : '#F6F6F6',
+                  borderColor: isFocused.userName ? '#FF6C00' : '#E8E8E8',
+                }}
+                placeholder="Логін"
+                placeholderTextColor={'#BDBDBD'}
+                value={login}
+                onChangeText={setLogin}
+                onFocus={() => {
+                  handleFocus('userName');
+                }}
+                onBlur={() => {
+                  handleBlur('userName');
+                }}
+                onSubmitEditing={handleSubmitEditing}
+              />
               <TextInput
                 style={{
                   ...styles.input,
@@ -110,10 +138,10 @@ export const LoginScreen = () => {
               activeOpacity={0.8}
               onPress={onSubmitForm}
             >
-              <Text style={styles.buttonText}>Увійти</Text>
+              <Text style={styles.buttonText}>Зареєстуватися</Text>
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.8}>
-              <Text style={styles.text}>Немає акаунту? Зареєструватися</Text>
+              <Text style={styles.text}>Вже є акаунт? Увійти</Text>
             </TouchableOpacity>
           </View>
         </ImageBackground>
@@ -141,7 +169,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     backgroundColor: 'white',
     width: '100%',
-    paddingTop: 32,
+    paddingTop: 92,
     paddingHorizontal: 16,
   },
 
@@ -155,7 +183,7 @@ const styles = StyleSheet.create({
   },
   form: {
     width: 343,
-    height: 116,
+    height: 182,
     position: 'relative',
     gap: 16,
     marginBottom: 43,
