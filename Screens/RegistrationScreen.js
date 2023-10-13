@@ -9,11 +9,10 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Keyboard,
+  Image,
 } from 'react-native';
-import Plus from '../assets/svg/plus.svg';
-import Cross from '../assets/svg/cross.svg';
+import { Avatar } from '../Components/Avatar';
 const background = require('../assets/images/background.png');
-const avatarPhoto = require('../assets/images/avatar-photo.png');
 
 export const RegistationScreen = () => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -22,6 +21,18 @@ export const RegistationScreen = () => {
     email: false,
     password: false,
   });
+
+  const [login, setLogin] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const onSubmitForm = () => {
+    console.log({ login: login, email: email, password: password });
+    setLogin('');
+    setEmail('');
+    setPassword('');
+  };
 
   const handleFocus = (inputName) => {
     setIsShowKeyboard(true);
@@ -36,7 +47,7 @@ export const RegistationScreen = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={-190}
+        keyboardVerticalOffset={-180}
         style={styles.container}
       >
         <ImageBackground
@@ -49,21 +60,10 @@ export const RegistationScreen = () => {
           <View
             style={{
               ...styles.wrapper,
-              marginBottom: isShowKeyboard ? 100 : 0,
+              paddingBottom: isShowKeyboard ? 160 : 78,
             }}
           >
-            <View style={styles.avatar}>
-              <View style={styles.avatarIcon}>
-                <Plus width={13} height={13} fill={'#FF6C00'} />
-              </View>
-            </View>
-
-            {/* With avatar photo  */}
-            {/* <ImageBackground source={avatarPhoto} style={styles.avatar}>
-            <View style={styles.avatarIconWithPhoto}>
-              <Cross width={13} height={13} fill={'#BDBDBD'} />
-            </View>
-          </ImageBackground> */}
+            <Avatar />
 
             <Text style={styles.title}>Реєстрація</Text>
 
@@ -76,6 +76,8 @@ export const RegistationScreen = () => {
                 }}
                 placeholder="Логін"
                 placeholderTextColor={'#BDBDBD'}
+                value={login}
+                onChangeText={setLogin}
                 onFocus={() => {
                   handleFocus('userName');
                 }}
@@ -92,6 +94,8 @@ export const RegistationScreen = () => {
                 }}
                 placeholder="Адреса електронної пошти"
                 placeholderTextColor={'#BDBDBD'}
+                value={email}
+                onChangeText={setEmail}
                 onFocus={() => {
                   handleFocus('email');
                 }}
@@ -108,7 +112,9 @@ export const RegistationScreen = () => {
                 }}
                 placeholder="Пароль"
                 placeholderTextColor={'#BDBDBD'}
-                secureTextEntry={true}
+                secureTextEntry={!isPasswordVisible}
+                value={password}
+                onChangeText={setPassword}
                 onFocus={() => {
                   handleFocus('password');
                 }}
@@ -117,12 +123,21 @@ export const RegistationScreen = () => {
                 }}
                 onSubmitEditing={handleSubmitEditing}
               />
-              <TouchableOpacity>
-                <Text style={styles.inputPassword}>Показати</Text>
+              <TouchableOpacity
+                disabled={!password}
+                onPress={() => setIsPasswordVisible((prevState) => !prevState)}
+              >
+                <Text style={styles.inputPassword}>
+                  {isPasswordVisible ? 'Cховати' : 'Показати'}
+                </Text>
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+            <TouchableOpacity
+              style={styles.button}
+              activeOpacity={0.8}
+              onPress={onSubmitForm}
+            >
               <Text style={styles.buttonText}>Зареєстуватися</Text>
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.8}>
@@ -155,43 +170,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: '100%',
     paddingTop: 92,
-    paddingBottom: 78,
     paddingHorizontal: 16,
-    height: 549,
   },
-  avatar: {
-    width: 120,
-    height: 120,
-    backgroundColor: '#F6F6F6',
-    borderRadius: 16,
-    top: -60,
-    position: 'absolute',
-    zIndex: 10,
-  },
-  avatarIcon: {
-    borderColor: '#FF6C00',
-    borderWidth: 1,
-    width: 25,
-    height: 25,
-    borderRadius: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: 81,
-    left: 107,
-    zIndex: 50,
-  },
-  avatarIconWithPhoto: {
-    borderColor: '#E8E8E8',
-    borderWidth: 1,
-    width: 25,
-    height: 25,
-    borderRadius: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: 81,
-    left: 107,
-    zIndex: 50,
-  },
+
   title: {
     marginBottom: 32,
     fontFamily: 'Roboto-Medium',

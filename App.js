@@ -6,8 +6,8 @@ import {
   View,
   ImageBackground,
 } from 'react-native';
-import { RegistationScreen } from './Components/RegistrationScreen';
-import { LoginScreen } from './Components/LoginScreen';
+import { RegistationScreen } from './Screens/RegistrationScreen';
+import { LoginScreen } from './Screens/LoginScreen';
 
 const background = require('./assets/images/background.png');
 
@@ -26,8 +26,8 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <RegistationScreen /> */}
-      <LoginScreen />
+      <RegistationScreen />
+      {/* <LoginScreen /> */}
       <StatusBar />
     </SafeAreaView>
   );
