@@ -14,7 +14,7 @@ import {
 import { Avatar } from '../Components/Avatar';
 const background = require('../assets/images/background.png');
 
-export const RegistationScreen = () => {
+export const RegistrationScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isFocused, setIsFocused] = useState({
     userName: false,
@@ -140,7 +140,10 @@ export const RegistationScreen = () => {
             >
               <Text style={styles.buttonText}>Зареєстуватися</Text>
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => navigation.navigate('LoginScreen')}
+            >
               <Text style={styles.text}>Вже є акаунт? Увійти</Text>
             </TouchableOpacity>
           </View>

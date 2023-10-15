@@ -1,3 +1,6 @@
+import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
 import {
   SafeAreaView,
@@ -6,12 +9,14 @@ import {
   View,
   ImageBackground,
 } from 'react-native';
-import { RegistationScreen } from './Screens/RegistrationScreen';
-import { LoginScreen } from './Screens/LoginScreen';
 
-const background = require('./assets/images/background.png');
+import { RegistrationScreen } from './Screens/RegistrationScreen';
+import { LoginScreen } from './Screens/LoginScreen';
+import { Home } from './Screens/Home';
 
 import { useFonts } from 'expo-font';
+
+const MainStack = createStackNavigator();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -25,11 +30,28 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <RegistationScreen />
-      {/* <LoginScreen /> */}
-      <StatusBar />
-    </SafeAreaView>
+    <NavigationContainer>
+      <SafeAreaView style={styles.container}>
+        <MainStack.Navigator initialRouteName="RegistrationScreen">
+          <MainStack.Screen
+            name="RegistrationScreen"
+            component={RegistrationScreen}
+            options={{ headerTransparent: true, title: '' }}
+          />
+          <MainStack.Screen
+            name="LoginScreen"
+            component={LoginScreen}
+            options={{ headerTransparent: true, title: '', headerLeft: null }}
+          />
+          <MainStack.Screen
+            name="Home"
+            component={Home}
+            options={{ title: 'Публікації' }}
+          />
+        </MainStack.Navigator>
+        <StatusBar />
+      </SafeAreaView>
+    </NavigationContainer>
   );
 }
 

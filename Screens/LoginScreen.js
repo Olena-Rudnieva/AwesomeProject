@@ -13,7 +13,7 @@ import {
 
 const background = require('../assets/images/background.png');
 
-export const LoginScreen = () => {
+export const LoginScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isFocused, setIsFocused] = useState({ email: false, password: false });
   const [email, setEmail] = useState('');
@@ -112,7 +112,10 @@ export const LoginScreen = () => {
             >
               <Text style={styles.buttonText}>Увійти</Text>
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => navigation.navigate('RegistrationScreen')}
+            >
               <Text style={styles.text}>Немає акаунту? Зареєструватися</Text>
             </TouchableOpacity>
           </View>
