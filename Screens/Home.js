@@ -18,7 +18,13 @@ export const Home = () => {
         tabBarShowLabel: false,
         tabBarActiveTintColor: '#FF6C00',
         tabBarInactiveTintColor: 'rgba(33, 33, 33, 0.8)',
-        tabBarStyle: { padding: 9, height: 83 },
+        tabBarStyle: {
+          display: route.name === 'CreatePostsScreen' ? 'none' : 'flex',
+          height: 83,
+          paddingTop: 9,
+          paddingHorizontal: 59,
+        },
+
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 

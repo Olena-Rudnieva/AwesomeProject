@@ -7,7 +7,6 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
-  ScrollView,
 } from 'react-native';
 import { useState } from 'react';
 import Camera from '../assets/svg/camera.svg';
@@ -49,75 +48,77 @@ export const CreatePostsScreen = () => {
           justifyContent: isShowKeyboard ? 'center' : 'flex-start',
         }}
       >
-        <ScrollView style={styles.wrapper}>
-          <View style={styles.photo}>
-            {photo && (
-              <Image
-                source={photo1}
-                style={{
-                  position: 'absolute',
-                }}
+        <View style={styles.wrapper}>
+          <View>
+            <View style={styles.photo}>
+              {photo && (
+                <Image
+                  source={photo1}
+                  style={{
+                    position: 'absolute',
+                  }}
+                />
+              )}
+              <TouchableOpacity onPress={handlePhotoChange}>
+                <View
+                  style={{
+                    ...styles.changePhoto,
+                    backgroundColor: photo
+                      ? 'rgba(255, 255, 255, 0.3)'
+                      : '#FFFFFF',
+                  }}
+                >
+                  <Camera
+                    width={24}
+                    height={24}
+                    fill={photo ? '#FFF' : '#BDBDBD'}
+                    stroke={'transparent'}
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <Text style={styles.photoText}>
+              {photo ? 'Редагувати фото' : 'Завантажте фото'}
+            </Text>
+
+            <View style={styles.form}>
+              <TextInput
+                style={{ ...styles.input, marginBottom: 16 }}
+                placeholder="Назва..."
+                placeholderTextColor={'#BDBDBD'}
+                value={title}
+                onChangeText={setTitle}
+                onFocus={() => setIsShowKeyboard('true')}
               />
-            )}
-            <TouchableOpacity onPress={handlePhotoChange}>
-              <View
+              <TextInput
+                style={styles.input}
+                placeholder="Місцевість..."
+                placeholderTextColor={'#BDBDBD'}
+                value={location}
+                onChangeText={setLocation}
+                onFocus={() => setIsShowKeyboard('true')}
+              />
+            </View>
+            <TouchableOpacity
+              style={{
+                ...styles.button,
+                backgroundColor:
+                  photo && title && location ? '#FF6C00' : '#F6F6F6',
+              }}
+              activeOpacity={0.8}
+              onPress={onSubmitForm}
+            >
+              <Text
                 style={{
-                  ...styles.changePhoto,
-                  backgroundColor: photo
-                    ? 'rgba(255, 255, 255, 0.3)'
-                    : '#FFFFFF',
+                  ...styles.buttonText,
+                  color: photo && title && location ? '#FFFFFF' : '#BDBDBD',
                 }}
               >
-                <Camera
-                  width={24}
-                  height={24}
-                  fill={photo ? '#FFF' : '#BDBDBD'}
-                  stroke={'transparent'}
-                />
-              </View>
+                Опублікувати
+              </Text>
             </TouchableOpacity>
           </View>
-
-          <Text style={styles.photoText}>
-            {photo ? 'Редагувати фото' : 'Завантажте фото'}
-          </Text>
-
-          <View style={styles.form}>
-            <TextInput
-              style={{ ...styles.input, marginBottom: 16 }}
-              placeholder="Назва..."
-              placeholderTextColor={'#BDBDBD'}
-              value={title}
-              onChangeText={setTitle}
-              onFocus={() => setIsShowKeyboard('true')}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Місцевість..."
-              placeholderTextColor={'#BDBDBD'}
-              value={location}
-              onChangeText={setLocation}
-              onFocus={() => setIsShowKeyboard('true')}
-            />
-          </View>
-          <TouchableOpacity
-            style={{
-              ...styles.button,
-              backgroundColor:
-                photo && title && location ? '#FF6C00' : '#F6F6F6',
-            }}
-            activeOpacity={0.8}
-            onPress={onSubmitForm}
-          >
-            <Text
-              style={{
-                ...styles.buttonText,
-                color: photo && title && location ? '#FFFFFF' : '#BDBDBD',
-              }}
-            >
-              Опублікувати
-            </Text>
-          </TouchableOpacity>
           <TouchableOpacity
             onPress={deletePost}
             style={styles.deleteBtn}
@@ -125,7 +126,7 @@ export const CreatePostsScreen = () => {
           >
             <Trash size={24} fill="#BDBDBD" stroke="#BDBDBD" />
           </TouchableOpacity>
-        </ScrollView>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -142,6 +143,8 @@ const styles = StyleSheet.create({
     width: 343,
     marginLeft: 'auto',
     marginRight: 'auto',
+    flex: 1,
+    justifyContent: 'space-between',
   },
   photo: {
     borderRadius: 8,
@@ -194,7 +197,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 111,
     textAlign: 'center',
-    marginBottom: 120,
   },
   buttonText: {
     fontFamily: 'Roboto-Regular',
@@ -205,7 +207,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F6F6F6',
     width: 70,
     height: 40,
-    marginBottom: 25,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
