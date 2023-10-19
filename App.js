@@ -8,11 +8,13 @@ import {
   Text,
   View,
   ImageBackground,
+  TouchableOpacity,
 } from 'react-native';
 
 import { RegistrationScreen } from './Screens/RegistrationScreen';
 import { LoginScreen } from './Screens/LoginScreen';
 import { Home } from './Screens/Home';
+import Logout from './assets/svg/logout.svg';
 
 import { useFonts } from 'expo-font';
 
@@ -32,24 +34,18 @@ export default function App() {
   return (
     <NavigationContainer>
       <SafeAreaView style={styles.container}>
-        <MainStack.Navigator initialRouteName="RegistrationScreen">
+        <MainStack.Navigator
+          initialRouteName="RegistrationScreen"
+          screenOptions={{ headerShown: false }}
+        >
           <MainStack.Screen
             name="RegistrationScreen"
             component={RegistrationScreen}
-            options={{ headerTransparent: true, title: '' }}
           />
-          <MainStack.Screen
-            name="LoginScreen"
-            component={LoginScreen}
-            options={{ headerTransparent: true, title: '', headerLeft: null }}
-          />
-          <MainStack.Screen
-            name="Home"
-            component={Home}
-            options={{ title: 'Публікації' }}
-          />
+          <MainStack.Screen name="LoginScreen" component={LoginScreen} />
+          <MainStack.Screen name="Home" component={Home} />
         </MainStack.Navigator>
-        <StatusBar />
+        <StatusBar style="auto" />
       </SafeAreaView>
     </NavigationContainer>
   );

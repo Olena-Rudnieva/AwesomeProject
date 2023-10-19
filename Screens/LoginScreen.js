@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import {
   ImageBackground,
   View,
@@ -13,7 +14,8 @@ import {
 
 const background = require('../assets/images/background.png');
 
-export const LoginScreen = ({ navigation }) => {
+export const LoginScreen = () => {
+  const navigation = useNavigation();
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isFocused, setIsFocused] = useState({ email: false, password: false });
   const [email, setEmail] = useState('');
@@ -21,7 +23,9 @@ export const LoginScreen = ({ navigation }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleSubmitForm = () => {
-    console.log({ email: email, password: password });
+    if (!email || !password) return console.warn('Введіть дані!');
+    console.log({ email, password });
+    navigation.navigate('Home', { user: { email, password } });
     setEmail('');
     setPassword('');
   };
@@ -171,6 +175,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 15,
     paddingHorizontal: 16,
+    fontFamily: 'Roboto-Regular',
     fontSize: 16,
     color: '#212121',
   },
@@ -185,17 +190,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
-  },
-  buttonText: {
     width: '100%',
     height: 51,
     backgroundColor: '#FF6C00',
     borderRadius: 100,
-    color: 'white',
     paddingVertical: 16,
     paddingHorizontal: 111,
     textAlign: 'center',
+  },
+  buttonText: {
+    fontFamily: 'Roboto-Regular',
     fontSize: 16,
+    color: 'white',
   },
   text: {
     color: '#1B4371',

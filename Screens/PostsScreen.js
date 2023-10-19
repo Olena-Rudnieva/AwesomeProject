@@ -1,52 +1,38 @@
-import { useState } from 'react';
-import {
-  Image,
-  View,
-  Text,
-  KeyboardAvoidingView,
-  TouchableOpacity,
-  TextInput,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from 'react-native';
+import { Image, View, Text, StyleSheet } from 'react-native';
 import { PostsList } from '../Components/PostsList';
 const avatar = require('../assets/images/avatar-photo.png');
 
 export const PostsScreen = () => {
-  //   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-
   return (
-    // <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-    //   <KeyboardAvoidingView
-    //     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    //   >
     <View style={styles.container}>
-      <View style={styles.user}>
-        <Image source={avatar} style={styles.avatar} />
-        <View>
-          <Text style={styles.userName}>Natali Romanova</Text>
-          <Text style={styles.userEmail}>email@example.com</Text>
+      <View style={styles.wrapper}>
+        <View style={styles.user}>
+          <Image source={avatar} style={styles.avatar} />
+          <View>
+            <Text style={styles.userName}>Natali Romanova</Text>
+            <Text style={styles.userEmail}>email@example.com</Text>
+          </View>
         </View>
+        <PostsList />
       </View>
-      <PostsList />
     </View>
-    //   </KeyboardAvoidingView>
-    // </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-
-    paddingHorizontal: 16,
+    paddingTop: 32,
     backgroundColor: '#ffffff',
   },
 
+  wrapper: {
+    paddingHorizontal: 16,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+
   title: {
-    // marginBottom: 43,
     fontFamily: 'Roboto-Medium',
     fontSize: 17,
     letterSpacing: -0.408,
@@ -62,9 +48,7 @@ const styles = StyleSheet.create({
   user: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 32,
     marginBottom: 32,
-    marginRight: 'auto',
   },
   userName: {
     fontFamily: 'Roboto-Bold',
