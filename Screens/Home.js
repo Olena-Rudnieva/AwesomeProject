@@ -57,7 +57,7 @@ export const Home = () => {
       <Tabs.Screen
         name="PostsScreen"
         component={PostsScreen}
-        options={{
+        options={({ navigation }) => ({
           headerTitle: 'Публікації',
           headerTitleStyle: {
             fontSize: 17,
@@ -72,17 +72,17 @@ export const Home = () => {
               style={{
                 paddingRight: 16,
               }}
-              // onPress={}
+              onPress={() => navigation.navigate('LoginScreen')}
             >
               <Logout width={24} height={24} stroke={'#BDBDBD'} />
             </TouchableOpacity>
           ),
-        }}
+        })}
       />
       <Tabs.Screen
         name="CreatePostsScreen"
         component={CreatePostsScreen}
-        options={{
+        options={({ navigation }) => ({
           headerTitle: 'Створити публікацію',
           headerTitleStyle: {
             fontSize: 17,
@@ -97,7 +97,7 @@ export const Home = () => {
               style={{
                 paddingLeft: 16,
               }}
-              // onPress={}
+              onPress={() => navigation.navigate('PostsScreen')}
             >
               <ArrowLeft
                 width={24}
@@ -106,8 +106,9 @@ export const Home = () => {
               />
             </TouchableOpacity>
           ),
-        }}
+        })}
       />
+
       <Tabs.Screen name="ProfileScreen" component={ProfileScreen} />
     </Tabs.Navigator>
   );

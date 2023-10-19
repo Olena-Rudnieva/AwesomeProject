@@ -7,10 +7,11 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
-  KeyboardAvoidingView,
+  ScrollView,
 } from 'react-native';
 import { useState } from 'react';
 import Camera from '../assets/svg/camera.svg';
+import Trash from '../assets/svg/trash.svg';
 const photo1 = require('../assets/images/image1.jpg');
 
 export const CreatePostsScreen = () => {
@@ -34,6 +35,12 @@ export const CreatePostsScreen = () => {
     Keyboard.dismiss();
   };
 
+  const deletePost = () => {
+    setPhoto(false);
+    setTitle('');
+    setLocation('');
+  };
+
   return (
     <TouchableWithoutFeedback onPress={handleKeyboardHide}>
       <View
@@ -42,7 +49,7 @@ export const CreatePostsScreen = () => {
           justifyContent: isShowKeyboard ? 'center' : 'flex-start',
         }}
       >
-        <View style={styles.wrapper}>
+        <ScrollView style={styles.wrapper}>
           <View style={styles.photo}>
             {photo && (
               <Image
@@ -111,7 +118,14 @@ export const CreatePostsScreen = () => {
               Опублікувати
             </Text>
           </TouchableOpacity>
-        </View>
+          <TouchableOpacity
+            onPress={deletePost}
+            style={styles.deleteBtn}
+            activeOpacity={0.8}
+          >
+            <Trash size={24} fill="#BDBDBD" stroke="#BDBDBD" />
+          </TouchableOpacity>
+        </ScrollView>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -176,14 +190,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: 51,
-
     borderRadius: 100,
     paddingVertical: 16,
     paddingHorizontal: 111,
     textAlign: 'center',
+    marginBottom: 120,
   },
   buttonText: {
     fontFamily: 'Roboto-Regular',
     fontSize: 16,
+  },
+  deleteBtn: {
+    borderRadius: 20,
+    backgroundColor: '#F6F6F6',
+    width: 70,
+    height: 40,
+    marginBottom: 25,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
