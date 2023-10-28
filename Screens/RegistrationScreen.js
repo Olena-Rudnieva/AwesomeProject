@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import {
   ImageBackground,
   View,
@@ -14,7 +15,8 @@ import {
 import { Avatar } from '../Components/Avatar';
 const background = require('../assets/images/background.png');
 
-export const RegistationScreen = () => {
+export const RegistrationScreen = () => {
+  const navigation = useNavigation();
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isFocused, setIsFocused] = useState({
     userName: false,
@@ -28,7 +30,9 @@ export const RegistationScreen = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const onSubmitForm = () => {
-    console.log({ login: login, email: email, password: password });
+    if (!login || !email || !password) return console.warn('Введіть дані!');
+    console.log({ login, email, password });
+    navigation.navigate('Home', { user: { login, email, password } });
     setLogin('');
     setEmail('');
     setPassword('');
@@ -140,7 +144,10 @@ export const RegistationScreen = () => {
             >
               <Text style={styles.buttonText}>Зареєстуватися</Text>
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => navigation.navigate('LoginScreen')}
+            >
               <Text style={styles.text}>Вже є акаунт? Увійти</Text>
             </TouchableOpacity>
           </View>
@@ -196,6 +203,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 15,
     paddingHorizontal: 16,
+    fontFamily: 'Roboto-Regular',
     fontSize: 16,
     color: '#212121',
   },
@@ -210,17 +218,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
-  },
-  buttonText: {
+    paddingVertical: 16,
+    paddingHorizontal: 111,
+    textAlign: 'center',
     width: '100%',
     height: 51,
     backgroundColor: '#FF6C00',
     borderRadius: 100,
-    color: 'white',
-    paddingVertical: 16,
-    paddingHorizontal: 111,
-    textAlign: 'center',
+  },
+  buttonText: {
+    fontFamily: 'Roboto-Regular',
     fontSize: 16,
+    color: 'white',
   },
   text: {
     color: '#1B4371',

@@ -1,0 +1,17 @@
+   <svg
+      width="24"
+      height="24"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <path fill="#fff" d="M0 0H24V24H0z"></path>
+      <path
+        fillRule="evenodd"
+        stroke="#000"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeOpacity="0.8"
+        d="M3 3h7v7H3V3zM14 3h7v7h-7V3zM14 14h7v7h-7v-7zM3 14h7v7H3v-7z"
+        clipRule="evenodd"
+      ></path>
+    </svg>
