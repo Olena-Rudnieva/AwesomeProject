@@ -1,21 +1,30 @@
-import { Image, View, Text, StyleSheet } from 'react-native';
+import {
+  Image,
+  View,
+  Text,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import { PostsList } from '../Components/PostsList';
 const avatar = require('../assets/images/avatar-photo.png');
 
 export const PostsScreen = () => {
   return (
-    <View style={styles.container}>
-      <View style={styles.wrapper}>
-        <View style={styles.user}>
-          <Image source={avatar} style={styles.avatar} />
-          <View>
-            <Text style={styles.userName}>Natali Romanova</Text>
-            <Text style={styles.userEmail}>email@example.com</Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <View style={styles.wrapper}>
+          <View style={styles.user}>
+            <Image source={avatar} style={styles.avatar} />
+            <View>
+              <Text style={styles.userName}>Natali Romanova</Text>
+              <Text style={styles.userEmail}>email@example.com</Text>
+            </View>
           </View>
+          <PostsList />
         </View>
-        <PostsList />
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -23,6 +32,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 32,
+    paddingBottom: 146,
     backgroundColor: '#ffffff',
   },
 

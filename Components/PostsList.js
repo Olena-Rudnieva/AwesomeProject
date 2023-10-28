@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  ScrollView,
   Image,
   StyleSheet,
   TouchableOpacity,
@@ -14,11 +13,16 @@ import Map from '../assets/svg/map.svg';
 
 export const PostsList = () => {
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView forceInset={{ bottom: 'never' }} style={styles.container}>
       <FlatList
         data={postsData}
-        renderItem={({ item }) => (
-          <View style={styles.item} key={item.id}>
+        renderItem={({ item, index }) => (
+          <View
+            style={
+              index === postsData.length - 1 ? styles.lastItem : styles.item
+            }
+            key={item.id}
+          >
             <Image source={item.src} />
             <Text style={styles.title}>{item.title}</Text>
             <View style={styles.itemBottom}>
@@ -38,6 +42,7 @@ export const PostsList = () => {
           </View>
         )}
         keyExtractor={(item) => item.id}
+        contentContainerStyle={{ paddingBottom: 34 }}
       />
     </SafeAreaView>
   );
@@ -49,6 +54,9 @@ const styles = StyleSheet.create({
   },
   item: {
     marginBottom: 32,
+  },
+  lastItem: {
+    marginBottom: 34,
   },
   title: {
     marginTop: 8,
