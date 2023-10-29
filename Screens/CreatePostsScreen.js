@@ -8,9 +8,11 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import { useState } from 'react';
-import Camera from '../assets/svg/camera.svg';
+import { useState, useEffect, useRef } from 'react';
+import Photo from '../assets/svg/camera.svg';
 import Trash from '../assets/svg/trash.svg';
+import { Camera, CameraType } from 'expo-camera';
+import * as MediaLibrary from 'expo-media-library';
 const photo1 = require('../assets/images/image1.jpg');
 
 export const CreatePostsScreen = () => {
@@ -18,6 +20,36 @@ export const CreatePostsScreen = () => {
   const [title, setTitle] = useState('');
   const [location, setLocation] = useState('');
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [hasPermission, setHasPermission] = useState(null);
+  // const [cameraRef, setCameraRef] = useState(null);
+  const [image, setImage] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [flash, setFlash] = useState(Camera.Constants.FlashMode.off);
+  const cameraRef = useRef(null);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const { status } = await Camera.requestCameraPermissionsAsync();
+  //     await MediaLibrary.requestPermissionsAsync();
+
+  //     setHasPermission(status === 'granted');
+  //   })();
+  // }, []);
+
+  useEffect(() => {
+    (async () => {
+      MediaLibrary.requestPermissionsAsync();
+      const cameraStatus = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(cameraStatus.status === 'granted');
+    })();
+  }, []);
+
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
 
   const handlePhotoChange = () => setPhoto(!photo);
   const onSubmitForm = () => {
@@ -49,7 +81,16 @@ export const CreatePostsScreen = () => {
         }}
       >
         <View style={styles.wrapper}>
-          <View>
+          <Camera
+            style={styles.camera}
+            type={type}
+            flashMode={flash}
+            ref={cameraRef}
+          >
+            <Text>Hello</Text>
+          </Camera>
+
+          {/* <View>
             <View style={styles.photo}>
               {photo && (
                 <Image
@@ -59,23 +100,63 @@ export const CreatePostsScreen = () => {
                   }}
                 />
               )}
-              <TouchableOpacity onPress={handlePhotoChange}>
-                <View
-                  style={{
-                    ...styles.changePhoto,
-                    backgroundColor: photo
-                      ? 'rgba(255, 255, 255, 0.3)'
-                      : '#FFFFFF',
-                  }}
-                >
-                  <Camera
-                    width={24}
-                    height={24}
-                    fill={photo ? '#FFF' : '#BDBDBD'}
-                    stroke={'transparent'}
-                  />
-                </View>
-              </TouchableOpacity>
+              <View style={styles.container2}>
+                <Camera style={styles.camera} type={type} ref={setCameraRef}>
+                  <View style={styles.photoView}>
+                    <TouchableOpacity
+                      style={styles.flipContainer}
+                      onPress={() => {
+                        setType(
+                          type === Camera.Constants.Type.back
+                            ? Camera.Constants.Type.front
+                            : Camera.Constants.Type.back
+                        );
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          marginBottom: 10,
+                          color: 'white',
+                        }}
+                      >
+                        {' '}
+                        Flip{' '}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={async () => {
+                        if (cameraRef) {
+                          const { uri } = await cameraRef.takePictureAsync();
+                          await MediaLibrary.createAssetAsync(uri);
+                        }
+                      }}
+                      onPress={handlePhotoChange}
+                    >
+                      <View style={styles.takePhotoOut}>
+                        <View style={styles.takePhotoInner}></View>
+                      </View>
+
+                      <View
+                        style={{
+                          ...styles.changePhoto,
+                          backgroundColor: photo
+                            ? 'rgba(255, 255, 255, 0.3)'
+                            : '#FFFFFF',
+                        }}
+                      >
+                        <Photo
+                          width={24}
+                          height={24}
+                          fill={photo ? '#FFF' : '#BDBDBD'}
+                          stroke={'transparent'}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </Camera>
+              </View>
             </View>
 
             <Text style={styles.photoText}>
@@ -118,7 +199,7 @@ export const CreatePostsScreen = () => {
                 Опублікувати
               </Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
           <TouchableOpacity
             onPress={deletePost}
             style={styles.deleteBtn}
@@ -145,6 +226,40 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
     flex: 1,
     justifyContent: 'space-between',
+  },
+  container2: { flex: 1 },
+  camera: { flex: 1 },
+  photoView: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    justifyContent: 'flex-end',
+  },
+
+  flipContainer: {
+    flex: 0.1,
+    alignSelf: 'flex-end',
+  },
+
+  button: { alignSelf: 'center' },
+
+  takePhotoOut: {
+    borderWidth: 2,
+    borderColor: 'white',
+    height: 50,
+    width: 50,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 50,
+  },
+
+  takePhotoInner: {
+    borderWidth: 2,
+    borderColor: 'white',
+    height: 40,
+    width: 40,
+    backgroundColor: 'white',
+    borderRadius: 50,
   },
   photo: {
     borderRadius: 8,
