@@ -9,32 +9,24 @@ import {
   Keyboard,
 } from 'react-native';
 import { useState, useEffect, useRef } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import Photo from '../assets/svg/camera.svg';
 import Trash from '../assets/svg/trash.svg';
-import { Camera, CameraType } from 'expo-camera';
+import Map from '../assets/svg/map.svg';
+import { Camera } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 const photo1 = require('../assets/images/image1.jpg');
 
 export const CreatePostsScreen = () => {
+  const navigation = useNavigation();
   const [photo, setPhoto] = useState(false);
   const [title, setTitle] = useState('');
   const [location, setLocation] = useState('');
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [hasPermission, setHasPermission] = useState(null);
-  // const [cameraRef, setCameraRef] = useState(null);
   const [image, setImage] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
-  const [flash, setFlash] = useState(Camera.Constants.FlashMode.off);
   const cameraRef = useRef(null);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const { status } = await Camera.requestCameraPermissionsAsync();
-  //     await MediaLibrary.requestPermissionsAsync();
-
-  //     setHasPermission(status === 'granted');
-  //   })();
-  // }, []);
 
   useEffect(() => {
     (async () => {
@@ -52,117 +44,107 @@ export const CreatePostsScreen = () => {
   }
 
   const handlePhotoChange = () => setPhoto(!photo);
+
+  const takePicture = async () => {
+    if (cameraRef) {
+      try {
+        const data = await cameraRef.current.takePictureAsync();
+        setImage(data.uri);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const saveImage = async () => {
+    if (image) {
+      try {
+        await MediaLibrary.createAssetAsync(image);
+        setImage(null);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   const onSubmitForm = () => {
-    if (!photo || !title || !location)
-      return console.warn('Завантажте фото та введіть дані !');
+    if ((!photo && !image) || !title || !location)
+      return console.warn('Зробіть або завантажте фото та введіть дані !');
     console.log({ photo, title, location });
     setPhoto(false);
     setTitle('');
     setLocation('');
+    saveImage();
+    () => navigation.navigate('PostsScreen');
   };
 
-  const handleKeyboardHide = () => {
-    setIsShowKeyboard(false);
-    Keyboard.dismiss();
-  };
+  // const handleKeyboardHide = () => {
+  //   setIsShowKeyboard(false);
+  //   Keyboard.dismiss();
+  // };
 
   const deletePost = () => {
     setPhoto(false);
     setTitle('');
     setLocation('');
+    setImage(null);
   };
 
   return (
-    <TouchableWithoutFeedback onPress={handleKeyboardHide}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View
         style={{
           ...styles.container,
           justifyContent: isShowKeyboard ? 'center' : 'flex-start',
+          paddingBottom: isShowKeyboard ? 34 : 100,
         }}
       >
         <View style={styles.wrapper}>
-          <Camera
-            style={styles.camera}
-            type={type}
-            flashMode={flash}
-            ref={cameraRef}
-          >
-            <Text>Hello</Text>
-          </Camera>
-
-          {/* <View>
+          <View>
             <View style={styles.photo}>
               {photo && (
                 <Image
                   source={photo1}
                   style={{
                     position: 'absolute',
+                    zIndex: 10,
                   }}
                 />
               )}
-              <View style={styles.container2}>
-                <Camera style={styles.camera} type={type} ref={setCameraRef}>
-                  <View style={styles.photoView}>
-                    <TouchableOpacity
-                      style={styles.flipContainer}
-                      onPress={() => {
-                        setType(
-                          type === Camera.Constants.Type.back
-                            ? Camera.Constants.Type.front
-                            : Camera.Constants.Type.back
-                        );
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 18,
-                          marginBottom: 10,
-                          color: 'white',
-                        }}
-                      >
-                        {' '}
-                        Flip{' '}
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={async () => {
-                        if (cameraRef) {
-                          const { uri } = await cameraRef.takePictureAsync();
-                          await MediaLibrary.createAssetAsync(uri);
-                        }
-                      }}
-                      onPress={handlePhotoChange}
-                    >
-                      <View style={styles.takePhotoOut}>
-                        <View style={styles.takePhotoInner}></View>
-                      </View>
-
-                      <View
-                        style={{
-                          ...styles.changePhoto,
-                          backgroundColor: photo
-                            ? 'rgba(255, 255, 255, 0.3)'
-                            : '#FFFFFF',
-                        }}
-                      >
-                        <Photo
-                          width={24}
-                          height={24}
-                          fill={photo ? '#FFF' : '#BDBDBD'}
-                          stroke={'transparent'}
-                        />
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                </Camera>
+              <View style={styles.photoContainer}>
+                {!image ? (
+                  <Camera style={styles.camera} type={type} ref={cameraRef}>
+                    <View style={styles.photoView}>
+                      <TouchableOpacity onPress={takePicture}>
+                        <View
+                          style={{
+                            ...styles.changePhoto,
+                            backgroundColor: image
+                              ? 'rgba(255, 255, 255, 0.3)'
+                              : '#FFFFFF',
+                          }}
+                        >
+                          <Photo
+                            width={24}
+                            height={24}
+                            fill={image ? '#FFF' : '#BDBDBD'}
+                            stroke={'transparent'}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  </Camera>
+                ) : (
+                  <Image source={{ uri: image }} style={styles.camera} />
+                )}
               </View>
             </View>
 
-            <Text style={styles.photoText}>
-              {photo ? 'Редагувати фото' : 'Завантажте фото'}
-            </Text>
-
+            <TouchableOpacity onPress={handlePhotoChange}>
+              <Text style={styles.photoText}>
+                {photo ? 'Редагувати фото' : 'Завантажте фото'}
+              </Text>
+            </TouchableOpacity>
             <View style={styles.form}>
               <TextInput
                 style={{ ...styles.input, marginBottom: 16 }}
@@ -170,22 +152,34 @@ export const CreatePostsScreen = () => {
                 placeholderTextColor={'#BDBDBD'}
                 value={title}
                 onChangeText={setTitle}
-                onFocus={() => setIsShowKeyboard('true')}
+                onFocus={() => setIsShowKeyboard(true)}
+                onBlur={() => setIsShowKeyboard(false)}
               />
-              <TextInput
-                style={styles.input}
-                placeholder="Місцевість..."
-                placeholderTextColor={'#BDBDBD'}
-                value={location}
-                onChangeText={setLocation}
-                onFocus={() => setIsShowKeyboard('true')}
-              />
+              <View style={styles.inputLocation}>
+                <Map
+                  width={24}
+                  height={24}
+                  stroke={'#BDBDBD'}
+                  style={styles.iconMap}
+                />
+                <TextInput
+                  style={{ ...styles.input, paddingLeft: 28 }}
+                  placeholder="Місцевість..."
+                  placeholderTextColor={'#BDBDBD'}
+                  value={location}
+                  onChangeText={setLocation}
+                  onFocus={() => setIsShowKeyboard(true)}
+                  onBlur={() => setIsShowKeyboard(false)}
+                />
+              </View>
             </View>
             <TouchableOpacity
               style={{
                 ...styles.button,
                 backgroundColor:
-                  photo && title && location ? '#FF6C00' : '#F6F6F6',
+                  (photo && title && location) || (image && title && location)
+                    ? '#FF6C00'
+                    : '#F6F6F6',
               }}
               activeOpacity={0.8}
               onPress={onSubmitForm}
@@ -193,13 +187,16 @@ export const CreatePostsScreen = () => {
               <Text
                 style={{
                   ...styles.buttonText,
-                  color: photo && title && location ? '#FFFFFF' : '#BDBDBD',
+                  color:
+                    (photo && title && location) || (image && title && location)
+                      ? '#FFFFFF'
+                      : '#BDBDBD',
                 }}
               >
                 Опублікувати
               </Text>
             </TouchableOpacity>
-          </View> */}
+          </View>
           <TouchableOpacity
             onPress={deletePost}
             style={styles.deleteBtn}
@@ -222,45 +219,22 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     width: 343,
+    height: 240,
     marginLeft: 'auto',
     marginRight: 'auto',
     flex: 1,
     justifyContent: 'space-between',
+    borderRadius: 8,
+    overflow: 'hidden',
   },
-  container2: { flex: 1 },
+  photoContainer: { flex: 1, borderRadius: 8, overflow: 'hidden' },
   camera: { flex: 1 },
   photoView: {
     flex: 1,
     backgroundColor: 'transparent',
-    justifyContent: 'flex-end',
-  },
-
-  flipContainer: {
-    flex: 0.1,
-    alignSelf: 'flex-end',
-  },
-
-  button: { alignSelf: 'center' },
-
-  takePhotoOut: {
-    borderWidth: 2,
-    borderColor: 'white',
-    height: 50,
-    width: 50,
-    display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 50,
   },
 
-  takePhotoInner: {
-    borderWidth: 2,
-    borderColor: 'white',
-    height: 40,
-    width: 40,
-    backgroundColor: 'white',
-    borderRadius: 50,
-  },
   photo: {
     borderRadius: 8,
     backgroundColor: '#F6F6F6',
@@ -272,16 +246,16 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   changePhoto: {
-    backgroundColor: 'red',
     width: 60,
     height: 60,
     borderRadius: 50,
-    position: 'absolute',
-    zIndex: 10,
-    top: 90,
-    left: 141,
+    // position: 'absolute',
+    // zIndex: 10,
+    // top: 90,
+    // left: 141,
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center',
   },
   photoText: {
     color: '#BDBDBD',
@@ -302,6 +276,14 @@ const styles = StyleSheet.create({
     color: '#212121',
     borderBottomWidth: 1,
     borderColor: '#E8E8E8',
+  },
+  inputLocation: {
+    position: 'relative',
+  },
+  iconMap: {
+    position: 'absolute',
+    top: 13,
+    left: 0,
   },
   button: {
     justifyContent: 'center',
