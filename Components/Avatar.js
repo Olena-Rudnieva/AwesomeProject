@@ -4,9 +4,7 @@ import Plus from '../assets/svg/plus.svg';
 import Cross from '../assets/svg/cross.svg';
 const avatar = require('../assets/images/avatar-photo.png');
 
-export const Avatar = () => {
-  const [avatarPhoto, setAvatarPhoto] = useState(false);
-  const handleAvatarChange = () => setAvatarPhoto(!avatarPhoto);
+export const Avatar = ({ avatarPhoto, handleAvatarChange }) => {
   return (
     <View style={styles.avatarWrapper}>
       {avatarPhoto && <Image source={avatar} />}

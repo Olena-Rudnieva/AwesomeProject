@@ -115,7 +115,13 @@ export const Home = () => {
         })}
       />
 
-      <Tabs.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Tabs.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Tabs.Navigator>
   );
 };

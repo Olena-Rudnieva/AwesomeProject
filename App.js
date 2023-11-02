@@ -13,8 +13,11 @@ import {
 
 import { RegistrationScreen } from './Screens/RegistrationScreen';
 import { LoginScreen } from './Screens/LoginScreen';
+import { MapScreen } from './Screens/MapScreen';
+import { CommentsScreen } from './Screens/CommentsScreen';
 import { Home } from './Screens/Home';
-import Logout from './assets/svg/logout.svg';
+// import Logout from './assets/svg/logout.svg';
+import ArrowLeft from './assets/svg/arrow-left.svg';
 
 import { useFonts } from 'expo-font';
 
@@ -44,6 +47,44 @@ export default function App() {
           />
           <MainStack.Screen name="LoginScreen" component={LoginScreen} />
           <MainStack.Screen name="Home" component={Home} />
+          <MainStack.Screen
+            name="MapScreen"
+            component={MapScreen}
+            options={{
+              headerShown: true,
+              title: 'Мапа',
+            }}
+          />
+          <MainStack.Screen
+            name="CommentsScreen"
+            component={CommentsScreen}
+            options={{
+              headerShown: true,
+              title: 'Коментарі',
+              headerTitleStyle: {
+                fontSize: 17,
+                fontFamily: 'Roboto-Medium',
+                color: '#212121',
+                lineHeight: 22,
+                letterSpacing: -0.408,
+              },
+              headerTitleAlign: 'center',
+              // headerLeft: () => (
+              //   <TouchableOpacity
+              //     style={{
+              //       paddingLeft: 16,
+              //     }}
+              //     onPress={() => navigation.navigate('PostsScreen')}
+              //   >
+              //     <ArrowLeft
+              //       width={24}
+              //       height={24}
+              //       stroke={'rgba(33, 33, 33, 0.8)'}
+              //     />
+              //   </TouchableOpacity>
+              // ),
+            }}
+          />
         </MainStack.Navigator>
         <StatusBar style="auto" />
       </SafeAreaView>

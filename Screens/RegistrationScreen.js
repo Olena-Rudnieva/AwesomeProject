@@ -23,12 +23,13 @@ export const RegistrationScreen = () => {
     email: false,
     password: false,
   });
-
+  const [avatarPhoto, setAvatarPhoto] = useState(false);
   const [login, setLogin] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
+  const handleAvatarChange = () => setAvatarPhoto(!avatarPhoto);
   const onSubmitForm = () => {
     if (!login || !email || !password) return console.warn('Введіть дані!');
     console.log({ login, email, password });
@@ -67,7 +68,10 @@ export const RegistrationScreen = () => {
               paddingBottom: isShowKeyboard ? 160 : 78,
             }}
           >
-            <Avatar />
+            <Avatar
+              avatarPhoto={avatarPhoto}
+              handleAvatarChange={handleAvatarChange}
+            />
 
             <Text style={styles.title}>Реєстрація</Text>
 

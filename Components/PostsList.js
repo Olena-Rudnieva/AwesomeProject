@@ -7,11 +7,13 @@ import {
   SafeAreaView,
   FlatList,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { postsData } from '../data/postsData';
 import Feather from '../assets/svg/feather.svg';
 import Map from '../assets/svg/map.svg';
 
 export const PostsList = () => {
+  const navigation = useNavigation();
   return (
     <SafeAreaView forceInset={{ bottom: 'never' }} style={styles.container}>
       <FlatList
@@ -27,13 +29,17 @@ export const PostsList = () => {
             <Text style={styles.title}>{item.title}</Text>
             <View style={styles.itemBottom}>
               <View style={styles.counter}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('CommentsScreen')}
+                >
                   <Feather width={24} height={24} stroke={'#BDBDBD'} />
                 </TouchableOpacity>
                 <Text style={styles.number}>0</Text>
               </View>
               <View style={styles.location}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('MapScreen')}
+                >
                   <Map width={24} height={24} stroke={'#BDBDBD'} />
                 </TouchableOpacity>
                 <Text style={styles.textLocation}>{item.location}</Text>
@@ -51,6 +57,7 @@ export const PostsList = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
+    width: '100%',
   },
   item: {
     marginBottom: 32,
