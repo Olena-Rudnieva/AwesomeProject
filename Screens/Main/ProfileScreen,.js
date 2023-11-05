@@ -12,10 +12,10 @@ import {
   Keyboard,
   Image,
 } from 'react-native';
-import { Avatar } from '../Components/Avatar';
-import { PostsList } from '../Components/PostsList';
-const background = require('../assets/images/background.png');
-import Logout from '../assets/svg/logout.svg';
+import { Avatar } from '../../Components/Avatar';
+import { PostsList } from '../../Components/PostsList';
+const background = require('../../assets/images/background.png');
+import Logout from '../../assets/svg/logout.svg';
 
 export const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -103,6 +103,6 @@ const styles = StyleSheet.create({
   },
 
   wrapperList: {
-    marginBottom: 300,
+    marginBottom: 240,
   },
 });

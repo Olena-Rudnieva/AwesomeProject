@@ -12,8 +12,8 @@ import {
   Keyboard,
   Image,
 } from 'react-native';
-import { Avatar } from '../Components/Avatar';
-const background = require('../assets/images/background.png');
+import { Avatar } from '../../Components/Avatar';
+const background = require('../../assets/images/background.png');
 
 export const RegistrationScreen = () => {
   const navigation = useNavigation();

@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import Photo from '../assets/svg/camera.svg';
-import Trash from '../assets/svg/trash.svg';
-import Map from '../assets/svg/map.svg';
+import Photo from '../../assets/svg/camera.svg';
+import Trash from '../../assets/svg/trash.svg';
+import Map from '../../assets/svg/map.svg';
 import { Camera } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 import * as Location from 'expo-location';

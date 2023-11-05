@@ -12,7 +12,7 @@ import {
   Keyboard,
 } from 'react-native';
 
-const background = require('../assets/images/background.png');
+const background = require('../../assets/images/background.png');
 
 export const LoginScreen = () => {
   const navigation = useNavigation();

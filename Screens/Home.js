@@ -1,9 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { PostsScreen } from './PostsScreen';
-import { CreatePostsScreen } from './CreatePostsScreen';
-import { ProfileScreen } from './ProfileScreen,';
+
+import { PostsScreen } from './Main/PostsScreen';
+import { CreatePostsScreen } from './Main/CreatePostsScreen';
+import { ProfileScreen } from './Main/ProfileScreen,';
+
 import Logout from '../assets/svg/logout.svg';
 import ArrowLeft from '../assets/svg/arrow-left.svg';
 import { TouchableOpacity } from 'react-native';
@@ -14,18 +16,18 @@ const Tabs = createBottomTabNavigator();
 export const Home = () => {
   return (
     <Tabs.Navigator
+      id="Home"
       screenOptions={({ route }) => ({
         tabBarShowLabel: false,
         tabBarActiveTintColor: '#FF6C00',
         tabBarInactiveTintColor: 'rgba(33, 33, 33, 0.8)',
         tabBarStyle: {
-          display: route.name === 'CreatePostsScreen' ? 'none' : 'flex',
           height: 83,
           paddingTop: 9,
           paddingHorizontal: 59,
         },
 
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ focused, color }) => {
           let iconName;
 
           if (route.name === 'PostsScreen') {
@@ -35,6 +37,7 @@ export const Home = () => {
           } else if (route.name === 'ProfileScreen') {
             iconName = 'user';
           }
+
           return (
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
               <View
@@ -63,32 +66,15 @@ export const Home = () => {
       <Tabs.Screen
         name="PostsScreen"
         component={PostsScreen}
-        options={({ navigation }) => ({
-          headerTitle: 'Публікації',
-          headerTitleStyle: {
-            fontSize: 17,
-            fontFamily: 'Roboto-Medium',
-            color: '#212121',
-            lineHeight: 22,
-            letterSpacing: -0.408,
-          },
-          headerTitleAlign: 'center',
-          headerRight: () => (
-            <TouchableOpacity
-              style={{
-                paddingRight: 16,
-              }}
-              onPress={() => navigation.navigate('LoginScreen')}
-            >
-              <Logout width={24} height={24} stroke={'#BDBDBD'} />
-            </TouchableOpacity>
-          ),
-        })}
+        options={{
+          headerShown: false,
+        }}
       />
       <Tabs.Screen
         name="CreatePostsScreen"
         component={CreatePostsScreen}
         options={({ navigation }) => ({
+          tabBarStyle: { display: 'none' },
           headerTitle: 'Створити публікацію',
           headerTitleStyle: {
             fontSize: 17,

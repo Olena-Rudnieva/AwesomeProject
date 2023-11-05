@@ -30,7 +30,7 @@ export const PostsList = () => {
             <View style={styles.itemBottom}>
               <View style={styles.counter}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('CommentsScreen')}
+                  onPress={() => navigation.navigate('CommentsScreen', item)}
                 >
                   <Feather width={24} height={24} stroke={'#BDBDBD'} />
                 </TouchableOpacity>

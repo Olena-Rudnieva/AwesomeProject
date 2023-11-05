@@ -6,10 +6,11 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import { PostsList } from '../Components/PostsList';
-const avatar = require('../assets/images/avatar-photo.png');
+import { PostsList } from '../../Components/PostsList';
 
-export const PostsScreen = () => {
+const avatar = require('../../assets/images/avatar-photo.png');
+
+export const MainPostsScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
