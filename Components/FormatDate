@@ -1,0 +1,31 @@
+const FormatDate = (date) => {
+  const months = [
+    'січня',
+    'лютого',
+    'березня',
+    'квітня',
+    'травня',
+    'червня',
+    'липня',
+    'серпня',
+    'вересня',
+    'жовтня',
+    'листопада',
+    'грудня',
+  ];
+
+  const formattedDate = new Date(date);
+  const day = formattedDate.getDate().toString().padStart(2, '0');
+  const month = formattedDate.getMonth();
+  const year = formattedDate.getFullYear();
+  const hours = formattedDate.getHours();
+  const minutes = formattedDate.getMinutes();
+
+  const formattedDateString = `${day} ${months[month]}, ${year} | ${hours
+    .toString()
+    .padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  console.log(formattedDateString);
+  return formattedDateString;
+};
+
+export default FormatDate;

@@ -2,20 +2,11 @@ import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  ImageBackground,
-  TouchableOpacity,
-} from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 
-import { RegistrationScreen } from './Screens/RegistrationScreen';
-import { LoginScreen } from './Screens/LoginScreen';
+import { RegistrationScreen } from './Screens/Auth/RegistrationScreen';
+import { LoginScreen } from './Screens/Auth/LoginScreen';
 import { Home } from './Screens/Home';
-import Logout from './assets/svg/logout.svg';
-
 import { useFonts } from 'expo-font';
 
 const MainStack = createStackNavigator();

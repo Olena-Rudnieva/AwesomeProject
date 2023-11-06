@@ -10,30 +10,22 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Keyboard,
-  Image,
 } from 'react-native';
-import { Avatar } from '../Components/Avatar';
-const background = require('../assets/images/background.png');
 
-export const RegistrationScreen = () => {
+const background = require('../../assets/images/background.png');
+
+export const LoginScreen = () => {
   const navigation = useNavigation();
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [isFocused, setIsFocused] = useState({
-    userName: false,
-    email: false,
-    password: false,
-  });
-
-  const [login, setLogin] = useState('');
+  const [isFocused, setIsFocused] = useState({ email: false, password: false });
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const onSubmitForm = () => {
-    if (!login || !email || !password) return console.warn('Введіть дані!');
-    console.log({ login, email, password });
-    navigation.navigate('Home', { user: { login, email, password } });
-    setLogin('');
+  const handleSubmitForm = () => {
+    if (!email || !password) return console.warn('Введіть дані!');
+    console.log({ email, password });
+    navigation.navigate('Home', { user: { email, password } });
     setEmail('');
     setPassword('');
   };
@@ -51,45 +43,25 @@ export const RegistrationScreen = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={-180}
+        keyboardVerticalOffset={-230}
         style={styles.container}
       >
         <ImageBackground
           source={background}
           style={{
             ...styles.background,
-            marginBottom: isShowKeyboard ? -100 : 0,
+            marginBottom: isShowKeyboard ? -45 : 0,
           }}
         >
           <View
             style={{
               ...styles.wrapper,
-              paddingBottom: isShowKeyboard ? 160 : 78,
+              paddingBottom: isShowKeyboard ? 155 : 144,
             }}
           >
-            <Avatar />
-
-            <Text style={styles.title}>Реєстрація</Text>
+            <Text style={styles.title}>Увійти</Text>
 
             <View style={styles.form}>
-              <TextInput
-                style={{
-                  ...styles.input,
-                  backgroundColor: isFocused.userName ? '#FFFFFF' : '#F6F6F6',
-                  borderColor: isFocused.userName ? '#FF6C00' : '#E8E8E8',
-                }}
-                placeholder="Логін"
-                placeholderTextColor={'#BDBDBD'}
-                value={login}
-                onChangeText={setLogin}
-                onFocus={() => {
-                  handleFocus('userName');
-                }}
-                onBlur={() => {
-                  handleBlur('userName');
-                }}
-                onSubmitEditing={handleSubmitEditing}
-              />
               <TextInput
                 style={{
                   ...styles.input,
@@ -140,15 +112,15 @@ export const RegistrationScreen = () => {
             <TouchableOpacity
               style={styles.button}
               activeOpacity={0.8}
-              onPress={onSubmitForm}
+              onPress={handleSubmitForm}
             >
-              <Text style={styles.buttonText}>Зареєстуватися</Text>
+              <Text style={styles.buttonText}>Увійти</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
-              onPress={() => navigation.navigate('LoginScreen')}
+              onPress={() => navigation.navigate('RegistrationScreen')}
             >
-              <Text style={styles.text}>Вже є акаунт? Увійти</Text>
+              <Text style={styles.text}>Немає акаунту? Зареєструватися</Text>
             </TouchableOpacity>
           </View>
         </ImageBackground>
@@ -176,7 +148,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     backgroundColor: 'white',
     width: '100%',
-    paddingTop: 92,
+    paddingTop: 32,
     paddingHorizontal: 16,
   },
 
@@ -190,7 +162,7 @@ const styles = StyleSheet.create({
   },
   form: {
     width: 343,
-    height: 182,
+    height: 116,
     position: 'relative',
     gap: 16,
     marginBottom: 43,
@@ -218,13 +190,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
-    paddingVertical: 16,
-    paddingHorizontal: 111,
-    textAlign: 'center',
     width: '100%',
     height: 51,
     backgroundColor: '#FF6C00',
     borderRadius: 100,
+    paddingVertical: 16,
+    paddingHorizontal: 111,
+    textAlign: 'center',
   },
   buttonText: {
     fontFamily: 'Roboto-Regular',
