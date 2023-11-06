@@ -3,15 +3,12 @@ import {
   View,
   StyleSheet,
   Text,
-  FlatList,
   Image,
   TextInput,
-  SafeAreaView,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
   ScrollView,
-  Button,
 } from 'react-native';
 import { postsData } from '../../data/postsData';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -43,16 +40,6 @@ export const CommentsScreen = ({ navigation, route }) => {
           });
     }
   }, [isFocused]);
-
-  // useFocusEffect(() => {
-  //   const setTabBarVisible = navigation?.getParent().setOptions;
-
-  //   if (setTabBarVisible) {
-  //     setTabBarVisible({
-  //       tabBarStyle: isFocused ? { display: 'none' } : {}, // Изменять стиль TabBar'а только на текущем экране "Comment"
-  //     });
-  //   }
-  // }, [isFocused, navigation]);
 
   const handleCommentData = () => {
     if (!comment.trim()) return alert('Залиште ваш коментар!');

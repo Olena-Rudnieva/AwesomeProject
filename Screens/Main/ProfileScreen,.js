@@ -5,12 +5,10 @@ import {
   View,
   Text,
   KeyboardAvoidingView,
-  TouchableOpacity,
-  TextInput,
+  TouchableOpacity,  
   StyleSheet,
   TouchableWithoutFeedback,
-  Keyboard,
-  Image,
+  Keyboard,  
 } from 'react-native';
 import { Avatar } from '../../Components/Avatar';
 import { PostsList } from '../../Components/PostsList';

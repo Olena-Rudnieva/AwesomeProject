@@ -6,7 +6,6 @@ import { PostsScreen } from './Main/PostsScreen';
 import { CreatePostsScreen } from './Main/CreatePostsScreen';
 import { ProfileScreen } from './Main/ProfileScreen,';
 
-import Logout from '../assets/svg/logout.svg';
 import ArrowLeft from '../assets/svg/arrow-left.svg';
 import { TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons';
