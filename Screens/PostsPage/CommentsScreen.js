@@ -11,6 +11,10 @@ import {
   ScrollView,
 } from 'react-native';
 import { postsData } from '../../data/postsData';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { getPosts } from '../../redux/posts/postsSelectors';
+import { addComment } from '../../redux/posts/postsSlice';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useIsFocused } from '@react-navigation/native';
 import Vector from '../../assets/svg/vector.svg';
@@ -18,11 +22,19 @@ import Vector from '../../assets/svg/vector.svg';
 export const CommentsScreen = ({ navigation, route }) => {
   const isFocused = useIsFocused();
   const { id } = route.params;
+  const postsData = useSelector(getPosts);
   const post = postsData.find((post) => post.id === id);
   const [isActive, setIsActive] = useState(false);
   const [comment, setComment] = useState('');
-
-  //   const [commentData, setCommentData] = useState([]);
+  // const [commentData, setCommentData] = useState([]);
+  const currentDate = Date.now();
+  const commentData = {
+    id: currentDate,
+    authorAvatar: '',
+    comment: comment,
+    // date: FormatDate(currentDate),
+    date: 'test',
+  };
 
   useEffect(() => {
     {
@@ -41,22 +53,13 @@ export const CommentsScreen = ({ navigation, route }) => {
     }
   }, [isFocused]);
 
+  const dispatch = useDispatch();
+
   const handleCommentData = () => {
     if (!comment.trim()) return alert('Залиште ваш коментар!');
-
-    //   Підготовка до відображення коментаря
-
-    // const currentDate = Date.now();
-
-    // const data = {
-    //   id: currentDate,
-    //   autorAvatar: '',
-    //   commentData: comment,
-    //   date: FormatDate(currentDate),
-    // };
-
     // setCommentData((prev) => [...prev, data]);
-    console.log(comment);
+    // dispatch(addComment(commentData));
+    console.log(commentData);
     setComment('');
     setIsActive(false);
   };
@@ -67,7 +70,12 @@ export const CommentsScreen = ({ navigation, route }) => {
         <ScrollView>
           <View style={styles.wrapper}>
             <View>
-              <Image source={post.src} style={styles.image} />
+              <Image
+                source={{
+                  uri: post.uri,
+                }}
+                style={styles.image}
+              />
               <View style={styles.itemWrapper}>
                 {post.comments.map((item, index) => (
                   <View key={item.id}>
@@ -125,7 +133,10 @@ export const CommentsScreen = ({ navigation, route }) => {
                 />
 
                 <View style={styles.button}>
-                  <TouchableOpacity onPress={handleCommentData}>
+                  <TouchableOpacity
+                    disabled={!comment}
+                    onPress={handleCommentData}
+                  >
                     <Vector width={10} height={14} fill={'#FFF'} />
                   </TouchableOpacity>
                 </View>
@@ -151,9 +162,10 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   image: {
-    width: '100%',
+    width: 343,
     height: 240,
     marginBottom: 28,
+    borderRadius: 8,
   },
 
   itemWrapper: {
@@ -181,6 +193,7 @@ const styles = StyleSheet.create({
   },
   commentWrapperEven: {
     width: 299,
+    height: 'auto',
     backgroundColor: 'rgba(0, 0, 0, 0.03)',
     padding: 16,
     borderBottomLeftRadius: 6,

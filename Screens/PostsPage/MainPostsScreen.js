@@ -15,11 +15,13 @@ export const MainPostsScreen = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <View style={styles.wrapper}>
-          <View style={styles.user}>
-            <Image source={avatar} style={styles.avatar} />
-            <View>
-              <Text style={styles.userName}>Natali Romanova</Text>
-              <Text style={styles.userEmail}>email@example.com</Text>
+          <View style={styles.userWrapper}>
+            <View style={styles.user}>
+              <Image source={avatar} style={styles.avatar} />
+              <View>
+                <Text style={styles.userName}>Natali Romanova</Text>
+                <Text style={styles.userEmail}>email@example.com</Text>
+              </View>
             </View>
           </View>
           <PostsList />
@@ -42,6 +44,11 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
+
+  // userWrapper: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'flex-start',
+  // },
 
   title: {
     fontFamily: 'Roboto-Medium',

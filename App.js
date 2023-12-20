@@ -7,6 +7,8 @@ import { SafeAreaView, StyleSheet } from 'react-native';
 import { RegistrationScreen } from './Screens/Auth/RegistrationScreen';
 import { LoginScreen } from './Screens/Auth/LoginScreen';
 import { Home } from './Screens/Home';
+import { Provider } from 'react-redux';
+import { store, persistor } from './redux/store';
 import { useFonts } from 'expo-font';
 
 const MainStack = createStackNavigator();
@@ -23,22 +25,24 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <SafeAreaView style={styles.container}>
-        <MainStack.Navigator
-          initialRouteName="RegistrationScreen"
-          screenOptions={{ headerShown: false }}
-        >
-          <MainStack.Screen
-            name="RegistrationScreen"
-            component={RegistrationScreen}
-          />
-          <MainStack.Screen name="LoginScreen" component={LoginScreen} />
-          <MainStack.Screen name="Home" component={Home} />
-        </MainStack.Navigator>
-        <StatusBar style="auto" />
-      </SafeAreaView>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <SafeAreaView style={styles.container}>
+          <MainStack.Navigator
+            initialRouteName="RegistrationScreen"
+            screenOptions={{ headerShown: false }}
+          >
+            <MainStack.Screen
+              name="RegistrationScreen"
+              component={RegistrationScreen}
+            />
+            <MainStack.Screen name="LoginScreen" component={LoginScreen} />
+            <MainStack.Screen name="Home" component={Home} />
+          </MainStack.Navigator>
+          <StatusBar style="auto" />
+        </SafeAreaView>
+      </NavigationContainer>
+    </Provider>
   );
 }
 

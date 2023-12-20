@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { addPost } from '../../redux/posts/postsSlice';
 import Photo from '../../assets/svg/camera.svg';
 import Trash from '../../assets/svg/trash.svg';
 import Map from '../../assets/svg/map.svg';
@@ -26,40 +28,43 @@ export const CreatePostsScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [image, setImage] = useState(null);
   const [location, setLocation] = useState('');
-  const [post, setPost] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const cameraRef = useRef(null);
+  const id = Date.now();
+  const post = { id, uri: image, title, place };
 
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.log('Permission to access location was denied');
-      }
+  // useEffect(() => {
+  //   (async () => {
+  //     let { status } = await Location.requestForegroundPermissionsAsync();
+  //     if (status !== 'granted') {
+  //       console.log('Permission to access location was denied');
+  //     }
 
-      let location = await Location.getCurrentPositionAsync({});
-      const coords = {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      };
-      setLocation(coords);
-    })();
-  }, []);
+  //     let location = await Location.getCurrentPositionAsync({});
+  //     const coords = {
+  //       latitude: location.coords.latitude,
+  //       longitude: location.coords.longitude,
+  //     };
+  //     setLocation(coords);
+  //   })();
+  // }, []);
 
-  useEffect(() => {
-    (async () => {
-      MediaLibrary.requestPermissionsAsync();
-      const cameraStatus = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(cameraStatus.status === 'granted');
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     MediaLibrary.requestPermissionsAsync();
+  //     const cameraStatus = await Camera.requestCameraPermissionsAsync();
+  //     setHasPermission(cameraStatus.status === 'granted');
+  //   })();
+  // }, []);
 
-  if (hasPermission === null) {
-    return <View />;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
+  // if (hasPermission === null) {
+  //   return <View />;
+  // }
+  // if (hasPermission === false) {
+  //   return <Text>No access to camera</Text>;
+  // }
+
+  const dispatch = useDispatch();
 
   const uploadPhoto = async () => {
     try {
@@ -100,17 +105,10 @@ export const CreatePostsScreen = () => {
   };
 
   const onSubmitForm = () => {
-    const id = Date.now();
     if (!image || !title || !place)
       return console.warn('Зробіть або завантажте фото та введіть дані !');
-    setPost({
-      id,
-      image,
-      title,
-      place,
-      location,
-    });
-    console.log(post);
+
+    dispatch(addPost(post));
     reset();
     navigation.navigate('PostsScreen');
   };
