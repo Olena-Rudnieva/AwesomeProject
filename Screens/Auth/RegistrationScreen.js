@@ -13,27 +13,30 @@ import {
   Image,
 } from 'react-native';
 import { Avatar } from '../../Components/Avatar';
+import { useDispatch } from 'react-redux';
+import { registerDB } from '../../redux/auth/authOperations';
 const background = require('../../assets/images/background.png');
 
 export const RegistrationScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isFocused, setIsFocused] = useState({
     userName: false,
     email: false,
     password: false,
   });
-  const [avatarPhoto, setAvatarPhoto] = useState(false);
   const [login, setLogin] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const handleAvatarChange = () => setAvatarPhoto(!avatarPhoto);
   const onSubmitForm = () => {
     if (!login || !email || !password) return console.warn('Введіть дані!');
-    console.log({ login, email, password });
-    navigation.navigate('Home', { user: { login, email, password } });
+
+    dispatch(registerDB({ login, email, password }));
+
+    // navigation.navigate('Home', { user: { login, email, password } });
     setLogin('');
     setEmail('');
     setPassword('');
@@ -46,7 +49,9 @@ export const RegistrationScreen = () => {
   const handleBlur = (inputName) => {
     setIsFocused({ [inputName]: false });
   };
-  const handleSubmitEditing = () => setIsShowKeyboard(false);
+  const handleSubmitEditing = () => {
+    setIsShowKeyboard(false);
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -68,11 +73,7 @@ export const RegistrationScreen = () => {
               paddingBottom: isShowKeyboard ? 160 : 78,
             }}
           >
-            <Avatar
-              avatarPhoto={avatarPhoto}
-              handleAvatarChange={handleAvatarChange}
-            />
-
+            <Avatar />
             <Text style={styles.title}>Реєстрація</Text>
 
             <View style={styles.form}>

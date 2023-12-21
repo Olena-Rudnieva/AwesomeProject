@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { PostsScreen } from './Main/PostsScreen';
 import { CreatePostsScreen } from './Main/CreatePostsScreen';
-import { ProfileScreen } from './Main/ProfileScreen,';
+import { ProfileScreen } from './Main/ProfileScreen';
 
 import ArrowLeft from '../assets/svg/arrow-left.svg';
 import { TouchableOpacity } from 'react-native';

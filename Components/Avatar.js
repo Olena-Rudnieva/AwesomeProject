@@ -2,21 +2,51 @@ import { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import Plus from '../assets/svg/plus.svg';
 import Cross from '../assets/svg/cross.svg';
-const avatar = require('../assets/images/avatar-photo.png');
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUserPhoto } from '../redux/auth/authSelectors';
+import * as ImagePicker from 'expo-image-picker';
+import { changeAvatarUser } from '../redux/auth/authOperations';
+import { uploadImageToStorage } from '../utils/uploadImageToStorage';
 
-export const Avatar = ({ avatarPhoto, handleAvatarChange }) => {
+export const Avatar = () => {
+  const dispatch = useDispatch();
+  const image = useSelector(selectUserPhoto);
+
+  const [avatar, setAvatar] = useState(image);
+
+  const handleAddAvatar = async () => {
+    const imageFromGallery = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!imageFromGallery.canceled) {
+      setAvatar(imageFromGallery.assets[0].uri);
+
+      await uploadImageToStorage(imageFromGallery.assets[0].uri, 'avatars/');
+
+      dispatch(changeAvatarUser(imageFromGallery.assets[0].uri));
+    }
+  };
+
+  const handleDeleteAvatar = () => {
+    setAvatar(null);
+    dispatch(changeAvatarUser(null));
+  };
+
   return (
     <View style={styles.avatarWrapper}>
-      {avatarPhoto && <Image source={avatar} />}
-
+      <Image source={avatar ? { uri: avatar } : null} style={styles.image} />
       <TouchableOpacity
         style={{
           ...styles.avatarIcon,
-          borderColor: avatarPhoto ? '#E8E8E8' : '#FF6C00',
+          borderColor: avatar ? '#E8E8E8' : '#FF6C00',
         }}
-        onPress={handleAvatarChange}
+        onPress={!avatar ? handleAddAvatar : handleDeleteAvatar}
       >
-        {avatarPhoto ? (
+        {avatar ? (
           <Cross width={13} height={13} fill={'#BDBDBD'} />
         ) : (
           <Plus width={13} height={13} fill={'#FF6C00'} />
@@ -47,5 +77,9 @@ const styles = StyleSheet.create({
     bottom: 14,
     right: 0,
     zIndex: 50,
+  },
+  image: {
+    flex: 1,
+    borderRadius: 16,
   },
 });

@@ -59,7 +59,7 @@ export const CommentsScreen = ({ navigation, route }) => {
     if (!comment.trim()) return alert('Залиште ваш коментар!');
     // setCommentData((prev) => [...prev, data]);
     // dispatch(addComment(commentData));
-    console.log(commentData);
+    // console.log(commentData);
     setComment('');
     setIsActive(false);
   };

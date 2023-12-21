@@ -5,20 +5,30 @@ import {
   View,
   Text,
   KeyboardAvoidingView,
-  TouchableOpacity,  
+  TouchableOpacity,
   StyleSheet,
   TouchableWithoutFeedback,
-  Keyboard,  
+  Keyboard,
 } from 'react-native';
 import { Avatar } from '../../Components/Avatar';
 import { PostsList } from '../../Components/PostsList';
 const background = require('../../assets/images/background.png');
 import Logout from '../../assets/svg/logout.svg';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUserId, selectUserName } from '../../redux/auth/authSelectors';
+import { authSignOutUser } from '../../redux/auth/authOperations';
 
 export const ProfileScreen = () => {
   const navigation = useNavigation();
-  const [avatarPhoto, setAvatarPhoto] = useState(true);
-  const handleAvatarChange = () => setAvatarPhoto(!avatarPhoto);
+  const dispatch = useDispatch();
+  // const state = useSelector((state) => state.auth);
+  // console.log('state', state);
+  // const { userId } = useSelector(selectUserId);
+
+  const signOut = () => {
+    dispatch(authSignOutUser());
+    // navigation.navigate('LoginScreen');
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -40,18 +50,12 @@ export const ProfileScreen = () => {
               // paddingBottom: isShowKeyboard ? 160 : 78,
             }}
           >
-            <TouchableOpacity
-              style={styles.logoutIcon}
-              onPress={() => navigation.navigate('LoginScreen')}
-            >
+            <TouchableOpacity style={styles.logoutIcon} onPress={signOut}>
               <Logout width={24} height={24} stroke={'#BDBDBD'} />
             </TouchableOpacity>
-            <Avatar
-              avatarPhoto={avatarPhoto}
-              handleAvatarChange={handleAvatarChange}
-            />
+            <Avatar />
 
-            <Text style={styles.title}>Natali Romanova</Text>
+            <Text style={styles.title}>Test</Text>
 
             <View style={styles.wrapperList}>
               <PostsList />

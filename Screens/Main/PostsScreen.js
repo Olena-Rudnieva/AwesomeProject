@@ -8,11 +8,20 @@ import { CommentsScreen } from '../PostsPage/CommentsScreen';
 import { StyleSheet } from 'react-native';
 import ArrowLeft from '../../assets/svg/arrow-left.svg';
 import Logout from '../../assets/svg/logout.svg';
+import { useDispatch } from 'react-redux';
+import { authSignOutUser } from '../../redux/auth/authOperations';
 
 const NestedScreen = createStackNavigator();
 
 export const PostsScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const signOut = () => {
+    dispatch(authSignOutUser());
+    // navigation.navigate('MainPostsScreen');
+  };
+
   return (
     <NestedScreen.Navigator
       initialRouteName="MainPostsScreen"
@@ -64,7 +73,7 @@ export const PostsScreen = () => {
               style={{
                 paddingLeft: 16,
               }}
-              onPress={() => navigation.navigate('MainPostsScreen')}
+              onPress={signOut}
             >
               <ArrowLeft
                 width={24}
