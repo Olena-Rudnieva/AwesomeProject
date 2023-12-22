@@ -19,7 +19,6 @@ export const PostsScreen = () => {
 
   const signOut = () => {
     dispatch(authSignOutUser());
-    // navigation.navigate('MainPostsScreen');
   };
 
   return (
@@ -47,7 +46,7 @@ export const PostsScreen = () => {
               style={{
                 paddingRight: 16,
               }}
-              onPress={() => navigation.navigate('LoginScreen')}
+              onPress={signOut}
             >
               <Logout width={24} height={24} stroke={'#BDBDBD'} />
             </TouchableOpacity>

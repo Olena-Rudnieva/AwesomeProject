@@ -25,30 +25,25 @@ export const Main = () => {
   return (
     <NavigationContainer>
       <SafeAreaView style={styles.container}>
-        <MainStack.Navigator
-          initialRouteName="RegistrationScreen"
-          screenOptions={{ headerShown: false }}
-        >
-          {/* {!isAuthorised ? (
-            <MainStack.Group>
-              <MainStack.Screen
-                name="RegistrationScreen"
-                component={RegistrationScreen}
-              />
-              <MainStack.Screen name="LoginScreen" component={LoginScreen} />
-            </MainStack.Group>
-          ) : (
-            <MainStack.Group>
-              <MainStack.Screen name="Home" component={Home} />
-            </MainStack.Group>
-          )} */}
-          <MainStack.Screen
-            name="RegistrationScreen"
-            component={RegistrationScreen}
-          />
-          <MainStack.Screen name="LoginScreen" component={LoginScreen} />
-          <MainStack.Screen name="Home" component={Home} />
-        </MainStack.Navigator>
+        {!isAuthorised ? (
+          <MainStack.Navigator
+            initialRouteName="RegistrationScreen"
+            screenOptions={{ headerShown: false }}
+          >
+            <MainStack.Screen
+              name="RegistrationScreen"
+              component={RegistrationScreen}
+            />
+            <MainStack.Screen name="LoginScreen" component={LoginScreen} />
+          </MainStack.Navigator>
+        ) : (
+          <MainStack.Navigator
+            initialRouteName="Home"
+            screenOptions={{ headerShown: false }}
+          >
+            <MainStack.Screen name="Home" component={Home} />
+          </MainStack.Navigator>
+        )}
         <StatusBar style="auto" />
       </SafeAreaView>
     </NavigationContainer>

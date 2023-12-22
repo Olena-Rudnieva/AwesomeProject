@@ -21,13 +21,10 @@ import { authSignOutUser } from '../../redux/auth/authOperations';
 export const ProfileScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  // const state = useSelector((state) => state.auth);
-  // console.log('state', state);
-  // const { userId } = useSelector(selectUserId);
+  const name = useSelector(selectUserName);
 
   const signOut = () => {
     dispatch(authSignOutUser());
-    // navigation.navigate('LoginScreen');
   };
 
   return (
@@ -55,7 +52,7 @@ export const ProfileScreen = () => {
             </TouchableOpacity>
             <Avatar />
 
-            <Text style={styles.title}>Test</Text>
+            <Text style={styles.title}>{name}</Text>
 
             <View style={styles.wrapperList}>
               <PostsList />

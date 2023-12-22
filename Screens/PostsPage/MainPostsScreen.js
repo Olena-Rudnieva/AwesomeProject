@@ -7,20 +7,31 @@ import {
   Keyboard,
 } from 'react-native';
 import { PostsList } from '../../Components/PostsList';
-
-const avatar = require('../../assets/images/avatar-photo.png');
+import { useSelector } from 'react-redux';
+import {
+  selectUserEmail,
+  selectUserName,
+  selectUserPhoto,
+} from '../../redux/auth/authSelectors';
 
 export const MainPostsScreen = () => {
+  const image = useSelector(selectUserPhoto);
+  const name = useSelector(selectUserName);
+  const email = useSelector(selectUserEmail);
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <View style={styles.wrapper}>
           <View style={styles.userWrapper}>
             <View style={styles.user}>
-              <Image source={avatar} style={styles.avatar} />
+              <Image
+                style={styles.avatar}
+                source={image ? { uri: image } : null}
+              />
               <View>
-                <Text style={styles.userName}>Natali Romanova</Text>
-                <Text style={styles.userEmail}>email@example.com</Text>
+                <Text style={styles.userName}>{name}</Text>
+                <Text style={styles.userEmail}>{email}</Text>
               </View>
             </View>
           </View>

@@ -35,8 +35,6 @@ export const RegistrationScreen = () => {
     if (!login || !email || !password) return console.warn('Введіть дані!');
 
     dispatch(registerDB({ login, email, password }));
-
-    // navigation.navigate('Home', { user: { login, email, password } });
     setLogin('');
     setEmail('');
     setPassword('');
