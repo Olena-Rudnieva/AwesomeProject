@@ -8,25 +8,22 @@ import {
   FlatList,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-// import { postsData } from '../data/postsData';
 import { useSelector } from 'react-redux';
-import { getPosts } from '../redux/posts/postsSelectors';
 import Feather from '../assets/svg/feather.svg';
 import Map from '../assets/svg/map.svg';
 
-export const PostsList = () => {
+export const PostsList = ({ posts }) => {
   const navigation = useNavigation();
-  const postsData = useSelector(getPosts);
-  console.log(postsData);
+
   return (
     <SafeAreaView forceInset={{ bottom: 'never' }} style={styles.container}>
       <FlatList
-        data={postsData}
-        renderItem={({ item, index }) => (
+        data={posts}
+        renderItem={({ item }) => (
           <View style={styles.item} key={item.id}>
             <Image
               source={{
-                uri: item.uri,
+                uri: item.src,
               }}
               style={{ width: 343, height: 240, borderRadius: 8 }}
             />
@@ -42,11 +39,19 @@ export const PostsList = () => {
               </View>
               <View style={styles.location}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('MapScreen')}
+                  onPress={() =>
+                    navigation.navigate('MapScreen', {
+                      location: {
+                        locality: item.locality,
+                        latitude: item.latitude,
+                        longitude: item.longitude,
+                      },
+                    })
+                  }
                 >
                   <Map width={24} height={24} stroke={'#BDBDBD'} />
                 </TouchableOpacity>
-                <Text style={styles.textLocation}>{item.place}</Text>
+                <Text style={styles.textLocation}>{item.location}</Text>
               </View>
             </View>
           </View>

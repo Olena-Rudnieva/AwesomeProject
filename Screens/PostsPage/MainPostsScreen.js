@@ -13,8 +13,27 @@ import {
   selectUserName,
   selectUserPhoto,
 } from '../../redux/auth/authSelectors';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { db } from '../../firebase/config';
+import { useEffect, useState } from 'react';
 
 export const MainPostsScreen = () => {
+  const [posts, setPosts] = useState([]);
+
+  const getAllPosts = async () => {
+    const q = query(collection(db, 'posts'), orderBy('date', 'desc'));
+
+    onSnapshot(q, (querySnapshot) => {
+      setPosts(
+        querySnapshot.docs.map((doc) => ({ ...doc.data(), postId: doc.id }))
+      );
+    });
+  };
+
+  useEffect(() => {
+    getAllPosts();
+  }, []);
+
   const image = useSelector(selectUserPhoto);
   const name = useSelector(selectUserName);
   const email = useSelector(selectUserEmail);
@@ -35,7 +54,7 @@ export const MainPostsScreen = () => {
               </View>
             </View>
           </View>
-          <PostsList />
+          <PostsList posts={posts} />
         </View>
       </View>
     </TouchableWithoutFeedback>
