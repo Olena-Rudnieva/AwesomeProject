@@ -10,8 +10,7 @@ import {
 } from 'react-native';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
-import { addPost } from '../../redux/posts/postsSlice';
+import { useSelector } from 'react-redux';
 import Photo from '../../assets/svg/camera.svg';
 import Trash from '../../assets/svg/trash.svg';
 import Map from '../../assets/svg/map.svg';
@@ -19,19 +18,68 @@ import { Camera } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
+import { db } from '../../firebase/config';
+import { collection, addDoc } from 'firebase/firestore';
+import { getStorage, uploadBytes, ref, getDownloadURL } from 'firebase/storage';
+import { selectUserId, selectUserName } from '../../redux/auth/authSelectors';
 
 export const CreatePostsScreen = () => {
   const navigation = useNavigation();
   const [title, setTitle] = useState('');
   const [place, setPlace] = useState('');
-  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [hasPermission, setHasPermission] = useState(null);
+  const [isKeyboardShown, setIsKeyboardShown] = useState(false);
+  const [permission, requestPermission] = Camera.useCameraPermissions();
   const [image, setImage] = useState(null);
   const [location, setLocation] = useState('');
+  const [coords, setCoords] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const cameraRef = useRef(null);
-  const id = Date.now();
-  const post = { id, uri: image, title, place };
+  const name = useSelector(selectUserName);
+  const id = useSelector(selectUserId);
+
+  useEffect(() => {
+    (async () => {
+      await Location.requestForegroundPermissionsAsync();
+    })();
+
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setIsKeyboardShown(true);
+    });
+
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setIsKeyboardShown(false);
+    });
+
+    (async () => {
+      const location = await Location.getCurrentPositionAsync();
+      setCoords(location);
+    })();
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
+  const hideKeyboard = () => {
+    setIsKeyboardShown(false);
+    Keyboard.dismiss();
+  };
+
+  if (!permission) {
+    return <View />;
+  }
+
+  if (!permission.granted) {
+    return (
+      <View style={styles.container}>
+        <Text style={{ textAlign: 'center' }}>No access to camera</Text>
+        <Button onPress={requestPermission} title="grant permission" />
+      </View>
+    );
+  }
+  // const id = Date.now();
+  // const post = { id, uri: image, title, place };
 
   // useEffect(() => {
   //   (async () => {
@@ -63,8 +111,6 @@ export const CreatePostsScreen = () => {
   // if (hasPermission === false) {
   //   return <Text>No access to camera</Text>;
   // }
-
-  const dispatch = useDispatch();
 
   const uploadPhoto = async () => {
     try {
@@ -104,21 +150,32 @@ export const CreatePostsScreen = () => {
     setImage(null);
   };
 
-  const onSubmitForm = () => {
+  const uploadPost = async () => {
+    try {
+      const image = await uploadPhoto();
+
+      await addDoc(collection(db, 'posts'), {
+        id,
+        name,
+        // image,
+        title,
+        location,
+        // coords: coords.coords,
+        date: Date.now().toString(),
+        // country,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onSubmitForm = async () => {
     if (!image || !title || !place)
       return console.warn('Зробіть або завантажте фото та введіть дані !');
 
-    dispatch(addPost(post));
-    reset();
+    await uploadPost();
     navigation.navigate('PostsScreen');
-  };
-
-  const keyboardOpen = () => {
-    setIsShowKeyboard(true);
-  };
-
-  const keyboardHide = () => {
-    setIsShowKeyboard(false);
+    reset();
   };
 
   const deletePost = () => {
@@ -126,12 +183,12 @@ export const CreatePostsScreen = () => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback onPress={hideKeyboard}>
       <View
         style={{
           ...styles.container,
-          paddingTop: isShowKeyboard ? 0 : 32,
-          paddingBottom: isShowKeyboard ? 0 : 34,
+          paddingTop: isKeyboardShown ? 0 : 32,
+          paddingBottom: isKeyboardShown ? 0 : 34,
         }}
       >
         <View style={styles.wrapper}>
@@ -178,8 +235,8 @@ export const CreatePostsScreen = () => {
                 placeholderTextColor={'#BDBDBD'}
                 value={title}
                 onChangeText={setTitle}
-                onFocus={keyboardOpen}
-                onBlur={keyboardHide}
+                // onFocus={keyboardOpen}
+                // onBlur={keyboardHide}
               />
               <View style={styles.inputLocation}>
                 <Map
@@ -194,8 +251,8 @@ export const CreatePostsScreen = () => {
                   placeholderTextColor={'#BDBDBD'}
                   value={place}
                   onChangeText={setPlace}
-                  onFocus={keyboardOpen}
-                  onBlur={keyboardHide}
+                  // onFocus={keyboardOpen}
+                  // onBlur={keyboardHide}
                 />
               </View>
             </View>
