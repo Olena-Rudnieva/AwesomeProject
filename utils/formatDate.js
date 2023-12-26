@@ -1,4 +1,4 @@
-const FormatDate = (date) => {
+export const formatDate = (date) => {
   const months = [
     'січня',
     'лютого',
@@ -24,8 +24,6 @@ const FormatDate = (date) => {
   const formattedDateString = `${day} ${months[month]}, ${year} | ${hours
     .toString()
     .padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-  console.log(formattedDateString);
+
   return formattedDateString;
 };
-
-export default FormatDate;

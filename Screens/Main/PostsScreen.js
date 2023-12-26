@@ -72,7 +72,7 @@ export const PostsScreen = () => {
               style={{
                 paddingLeft: 16,
               }}
-              onPress={signOut}
+              onPress={() => navigation.goBack()}
             >
               <ArrowLeft
                 width={24}

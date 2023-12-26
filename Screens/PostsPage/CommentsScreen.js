@@ -10,30 +10,36 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
-import { postsData } from '../../data/postsData';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../../firebase/config';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { getPosts } from '../../redux/posts/postsSelectors';
-import { addComment } from '../../redux/posts/postsSlice';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useIsFocused } from '@react-navigation/native';
 import Vector from '../../assets/svg/vector.svg';
+import {
+  selectUserEmail,
+  selectUserName,
+  selectUserPhoto,
+} from '../../redux/auth/authSelectors';
+import { formatDate } from '../../utils/formatDate';
 
 export const CommentsScreen = ({ navigation, route }) => {
   const isFocused = useIsFocused();
-  const { id } = route.params;
-  const postsData = useSelector(getPosts);
-  const post = postsData.find((post) => post.id === id);
+  const { id, image, comments } = route.params;
   const [isActive, setIsActive] = useState(false);
+  const [showKeyboard, setShowKeyboard] = useState(false);
   const [comment, setComment] = useState('');
-  // const [commentData, setCommentData] = useState([]);
-  const currentDate = Date.now();
-  const commentData = {
-    id: currentDate,
-    authorAvatar: '',
-    comment: comment,
-    // date: FormatDate(currentDate),
-    date: 'test',
+  const [allComments, setAllComments] = useState(comments);
+  const avatar = useSelector(selectUserPhoto);
+  const name = useSelector(selectUserName);
+  const email = useSelector(selectUserEmail);
+
+  const getAllComments = async () => {
+    const docRef = doc(db, 'posts', id);
+    const docSnap = await getDoc(docRef);
+
+    setAllComments(docSnap.data().comments);
   };
 
   useEffect(() => {
@@ -53,31 +59,62 @@ export const CommentsScreen = ({ navigation, route }) => {
     }
   }, [isFocused]);
 
-  const dispatch = useDispatch();
+  useEffect(() => {
+    getAllComments();
+  }, []);
 
-  const handleCommentData = () => {
+  const createNewComment = async () => {
     if (!comment.trim()) return alert('Залиште ваш коментар!');
-    // setCommentData((prev) => [...prev, data]);
-    // dispatch(addComment(commentData));
-    // console.log(commentData);
+
+    const docRef = doc(db, 'posts', id);
+
+    await updateDoc(docRef, {
+      comments: [
+        ...allComments,
+        {
+          comment,
+          avatar,
+          email,
+          name,
+          commentDate: Date.now(),
+        },
+      ],
+    });
+
     setComment('');
+    getAllComments();
     setIsActive(false);
   };
 
+  const handleFocus = () => {
+    setShowKeyboard(true);
+    setIsActive(true);
+  };
+
+  const handleBlur = () => {
+    setShowKeyboard(false);
+    setIsActive(false);
+  };
+
+  const hideKeyboard = () => {
+    setShowKeyboard(false);
+    Keyboard.dismiss();
+  };
+
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback onPress={hideKeyboard}>
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.wrapper}>
             <View>
               <Image
                 source={{
-                  uri: post.uri,
+                  uri: image,
                 }}
                 style={styles.image}
               />
               <View style={styles.itemWrapper}>
-                {post.comments.map((item, index) => (
+                {allComments.map((item, index) => (
                   <View key={item.id}>
                     <View
                       style={
@@ -86,7 +123,7 @@ export const CommentsScreen = ({ navigation, route }) => {
                           : styles.commentItem
                       }
                     >
-                      <Image source={item.authorAvatar} />
+                      <Image source={avatar} />
                       <View
                         style={
                           index % 2 === 1
@@ -102,7 +139,7 @@ export const CommentsScreen = ({ navigation, route }) => {
                               : styles.textTime
                           }
                         >
-                          {item.createdTime}
+                          {formatDate(item.commentDate)}
                         </Text>
                       </View>
                     </View>
@@ -128,14 +165,14 @@ export const CommentsScreen = ({ navigation, route }) => {
                   placeholderTextColor={'#BDBDBD'}
                   value={comment}
                   onChangeText={(value) => setComment(value)}
-                  onFocus={() => setIsActive(true)}
-                  onBlur={() => setIsActive(false)}
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
                 />
 
                 <View style={styles.button}>
                   <TouchableOpacity
                     disabled={!comment}
-                    onPress={handleCommentData}
+                    onPress={createNewComment}
                   >
                     <Vector width={10} height={14} fill={'#FFF'} />
                   </TouchableOpacity>

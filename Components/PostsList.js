@@ -23,7 +23,7 @@ export const PostsList = ({ posts }) => {
           <View style={styles.item} key={item.id}>
             <Image
               source={{
-                uri: item.src,
+                uri: item.image,
               }}
               style={{ width: 343, height: 240, borderRadius: 8 }}
             />
@@ -35,23 +35,23 @@ export const PostsList = ({ posts }) => {
                 >
                   <Feather width={24} height={24} stroke={'#BDBDBD'} />
                 </TouchableOpacity>
-                <Text style={styles.number}>0</Text>
+                <Text style={styles.number}>{item.comments.length}</Text>
               </View>
               <View style={styles.location}>
                 <TouchableOpacity
                   onPress={() =>
                     navigation.navigate('MapScreen', {
-                      location: {
-                        locality: item.locality,
-                        latitude: item.latitude,
-                        longitude: item.longitude,
-                      },
+                      // location: {
+                      //   locality: item.locality,
+                      //   latitude: item.latitude,
+                      //   longitude: item.longitude,
+                      // },
                     })
                   }
                 >
                   <Map width={24} height={24} stroke={'#BDBDBD'} />
                 </TouchableOpacity>
-                <Text style={styles.textLocation}>{item.location}</Text>
+                <Text style={styles.textLocation}>{item.place}</Text>
               </View>
             </View>
           </View>

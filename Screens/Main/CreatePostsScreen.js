@@ -21,96 +21,65 @@ import * as ImagePicker from 'expo-image-picker';
 import { db } from '../../firebase/config';
 import { collection, addDoc } from 'firebase/firestore';
 import { getStorage, uploadBytes, ref, getDownloadURL } from 'firebase/storage';
-import { selectUserId, selectUserName } from '../../redux/auth/authSelectors';
+import {
+  selectUserEmail,
+  selectUserId,
+  selectUserName,
+} from '../../redux/auth/authSelectors';
+import { uploadImageToStorage } from '../../utils/uploadImageToStorage';
 
 export const CreatePostsScreen = () => {
   const navigation = useNavigation();
+  const [image, setImage] = useState(null);
   const [title, setTitle] = useState('');
   const [place, setPlace] = useState('');
-  const [isKeyboardShown, setIsKeyboardShown] = useState(false);
-  const [permission, requestPermission] = Camera.useCameraPermissions();
-  const [image, setImage] = useState(null);
   const [location, setLocation] = useState('');
-  const [coords, setCoords] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
   const cameraRef = useRef(null);
-  const name = useSelector(selectUserName);
-  const id = useSelector(selectUserId);
+  const [hasPermissionCamera, setHasPermissionCamera] = useState(null);
+  const [hasPermissionLocation, setHasPermissionLocation] = useState(null);
+  const [typeCamera, setTypeCamera] = useState(Camera.Constants.Type.back);
+  const [showKeyboard, setShowKeyboard] = useState(false);
+  const userName = useSelector(selectUserName);
+  const userId = useSelector(selectUserId);
 
   useEffect(() => {
     (async () => {
-      await Location.requestForegroundPermissionsAsync();
+      console.log('createPost useEffect');
+
+      let cameraPermission = await Camera.requestCameraPermissionsAsync();
+      setHasPermissionCamera(cameraPermission.status === 'granted');
+
+      let locationPermission =
+        await Location.requestForegroundPermissionsAsync();
+      setHasPermissionLocation(locationPermission.status === 'granted');
     })();
-
-    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
-      setIsKeyboardShown(true);
-    });
-
-    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
-      setIsKeyboardShown(false);
-    });
-
-    (async () => {
-      const location = await Location.getCurrentPositionAsync();
-      setCoords(location);
-    })();
-
-    return () => {
-      showSubscription.remove();
-      hideSubscription.remove();
-    };
   }, []);
 
-  const hideKeyboard = () => {
-    setIsKeyboardShown(false);
-    Keyboard.dismiss();
-  };
-
-  if (!permission) {
+  if (hasPermissionCamera === null) {
     return <View />;
   }
-
-  if (!permission.granted) {
-    return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: 'center' }}>No access to camera</Text>
-        <Button onPress={requestPermission} title="grant permission" />
-      </View>
-    );
+  if (hasPermissionCamera === false) {
+    return <Text>No access to camera</Text>;
   }
-  // const id = Date.now();
-  // const post = { id, uri: image, title, place };
 
-  // useEffect(() => {
-  //   (async () => {
-  //     let { status } = await Location.requestForegroundPermissionsAsync();
-  //     if (status !== 'granted') {
-  //       console.log('Permission to access location was denied');
-  //     }
+  if (hasPermissionLocation === null) {
+    return <View />;
+  }
+  if (hasPermissionLocation === false) {
+    return <Text>No access to location</Text>;
+  }
 
-  //     let location = await Location.getCurrentPositionAsync({});
-  //     const coords = {
-  //       latitude: location.coords.latitude,
-  //       longitude: location.coords.longitude,
-  //     };
-  //     setLocation(coords);
-  //   })();
-  // }, []);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     MediaLibrary.requestPermissionsAsync();
-  //     const cameraStatus = await Camera.requestCameraPermissionsAsync();
-  //     setHasPermission(cameraStatus.status === 'granted');
-  //   })();
-  // }, []);
-
-  // if (hasPermission === null) {
-  //   return <View />;
-  // }
-  // if (hasPermission === false) {
-  //   return <Text>No access to camera</Text>;
-  // }
+  const takePicture = async () => {
+    if (cameraRef) {
+      try {
+        const data = await cameraRef.current.takePictureAsync();
+        await MediaLibrary.createAssetAsync(data.uri);
+        setImage(data.uri);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   const uploadPhoto = async () => {
     try {
@@ -132,15 +101,27 @@ export const CreatePostsScreen = () => {
     }
   };
 
-  const takePicture = async () => {
-    if (cameraRef) {
-      try {
-        const data = await cameraRef.current.takePictureAsync();
-        await MediaLibrary.createAssetAsync(data.uri);
-        setImage(data.uri);
-      } catch (error) {
-        console.log(error);
-      }
+  const uploadPost = async () => {
+    try {
+      // const image = await uploadPhoto();
+      // const photoURL = await uploadImageToStorage(image, 'images/');
+      const {
+        coords: { latitude, longitude },
+      } = await Location.getCurrentPositionAsync({});
+
+      await addDoc(collection(db, 'posts'), {
+        userId,
+        userName,
+        image,
+        title,
+        place,
+        latitude,
+        longitude,
+        comments: [],
+        date: Date.now().toString(),
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -148,25 +129,6 @@ export const CreatePostsScreen = () => {
     setTitle('');
     setPlace('');
     setImage(null);
-  };
-
-  const uploadPost = async () => {
-    try {
-      const image = await uploadPhoto();
-
-      await addDoc(collection(db, 'posts'), {
-        id,
-        name,
-        // image,
-        title,
-        location,
-        // coords: coords.coords,
-        date: Date.now().toString(),
-        // country,
-      });
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const onSubmitForm = async () => {
@@ -182,13 +144,88 @@ export const CreatePostsScreen = () => {
     reset();
   };
 
+  const hideKeyboard = () => {
+    setShowKeyboard(false);
+    Keyboard.dismiss();
+  };
+
+  // const uploadPhoto = async () => {
+  //   try {
+  //     const { status } =
+  //       await ImagePicker.requestMediaLibraryPermissionsAsync();
+  //     if (status === 'granted') {
+  //       const result = await ImagePicker.launchImageLibraryAsync({
+  //         mediaTypes: ImagePicker.MediaTypeOptions.All,
+  //         allowsEditing: true,
+  //         aspect: [4, 3],
+  //         quality: 1,
+  //       });
+  //       if (!result.canceled) {
+  //         setImage(result.assets[0].uri);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log('error', error.message);
+  //   }
+  // };
+
+  // const takePicture = async () => {
+  //   if (cameraRef) {
+  //     try {
+  //       const data = await cameraRef.current.takePictureAsync();
+  //       await MediaLibrary.createAssetAsync(data.uri);
+  //       setImage(data.uri);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  // };
+
+  // const reset = () => {
+  //   setTitle('');
+  //   setPlace('');
+  //   setImage(null);
+  // };
+
+  // const uploadPost = async () => {
+  //   try {
+  //     const image = await uploadPhoto();
+
+  //     await addDoc(collection(db, 'posts'), {
+  //       id,
+  //       name,
+  //       // image,
+  //       title,
+  //       location,
+  //       // coords: coords.coords,
+  //       date: Date.now().toString(),
+  //       // country,
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // const onSubmitForm = async () => {
+  //   if (!image || !title || !place)
+  //     return console.warn('Зробіть або завантажте фото та введіть дані !');
+
+  //   await uploadPost();
+  //   navigation.navigate('PostsScreen');
+  //   reset();
+  // };
+
+  // const deletePost = () => {
+  //   reset();
+  // };
+
   return (
     <TouchableWithoutFeedback onPress={hideKeyboard}>
       <View
         style={{
           ...styles.container,
-          paddingTop: isKeyboardShown ? 0 : 32,
-          paddingBottom: isKeyboardShown ? 0 : 34,
+          // paddingTop: isKeyboardShown ? 0 : 32,
+          // paddingBottom: isKeyboardShown ? 0 : 34,
         }}
       >
         <View style={styles.wrapper}>
@@ -196,7 +233,11 @@ export const CreatePostsScreen = () => {
             <View style={styles.photo}>
               <View style={styles.photoContainer}>
                 {!image ? (
-                  <Camera style={styles.camera} type={type} ref={cameraRef}>
+                  <Camera
+                    style={styles.camera}
+                    type={typeCamera}
+                    ref={cameraRef}
+                  >
                     <View style={styles.photoView}>
                       <TouchableOpacity onPress={takePicture}>
                         <View

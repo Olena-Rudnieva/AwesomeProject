@@ -20,18 +20,18 @@ import { useEffect, useState } from 'react';
 export const MainPostsScreen = () => {
   const [posts, setPosts] = useState([]);
 
-  const getAllPosts = async () => {
-    const q = query(collection(db, 'posts'), orderBy('date', 'desc'));
-
-    onSnapshot(q, (querySnapshot) => {
-      setPosts(
-        querySnapshot.docs.map((doc) => ({ ...doc.data(), postId: doc.id }))
-      );
-    });
-  };
-
   useEffect(() => {
-    getAllPosts();
+    const q = query(collection(db, 'posts'), orderBy('date', 'desc'));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const allPosts = [];
+      querySnapshot.forEach((doc) => {
+        allPosts.push({ ...doc.data(), id: doc.id });
+      });
+      setPosts(allPosts);
+    });
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const image = useSelector(selectUserPhoto);

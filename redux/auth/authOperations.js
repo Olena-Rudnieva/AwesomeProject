@@ -34,6 +34,7 @@ export const registerDB =
         image: userUpdated.photoURL,
       };
 
+      console.log(userUpdatedProfile);
       dispatch(updateUserProfile(userUpdatedProfile));
     } catch (error) {
       throw new Error(error.message);
