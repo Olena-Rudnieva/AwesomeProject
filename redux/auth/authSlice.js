@@ -25,9 +25,13 @@ export const authSlice = createSlice({
     }),
     authSignOut: () => initialState,
 
-    updatePhoto: (state, { payload }) => {
-      state.image = payload.avatar;
-    },
+    // updatePhoto: (state, { payload }) => {
+    //   state.image = payload.image;
+    // },
+    updatePhoto: (state, { payload }) => ({
+      ...state,
+      image: payload.image,
+    }),
   },
 });
 

@@ -75,11 +75,6 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
 
-  // userWrapper: {
-  //   flexDirection: 'row',
-  //   justifyContent: 'flex-start',
-  // },
-
   title: {
     fontFamily: 'Roboto-Medium',
     fontSize: 17,

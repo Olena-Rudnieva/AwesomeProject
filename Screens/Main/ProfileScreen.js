@@ -60,12 +60,7 @@ export const ProfileScreen = () => {
         style={styles.container}
       >
         <ImageBackground
-          source={background}
-          // style={{
-          //   ...styles.background,
-          //   // justifyContent: posts ? 'flex-start' : 'flex-end',
-          //   justifyContent: !posts ? 'flex-end' : 'flex-center',
-          // }}
+          source={background}     
           style={[
             styles.background,
             { justifyContent: posts.length ? 'flex-start' : 'flex-end' },

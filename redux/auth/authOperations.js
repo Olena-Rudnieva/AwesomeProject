@@ -77,7 +77,7 @@ export const changeAvatarUser =
       });
     }
 
-    dispatch(updatePhoto({ avatar: processedAvatarURL }));
+    dispatch(updatePhoto({ image: processedAvatarURL }));
   };
 
 export const authSignOutUser = () => async (dispatch, getState) => {

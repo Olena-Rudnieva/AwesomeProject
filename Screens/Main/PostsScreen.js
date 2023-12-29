@@ -95,7 +95,7 @@ export const PostsScreen = () => {
               style={{
                 paddingLeft: 16,
               }}
-              onPress={() => navigation.navigate('MainPostsScreen')}
+              onPress={() => navigation.goBack()}
             >
               <ArrowLeft
                 width={24}

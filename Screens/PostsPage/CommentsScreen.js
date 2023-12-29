@@ -13,7 +13,6 @@ import {
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useIsFocused } from '@react-navigation/native';
 import Vector from '../../assets/svg/vector.svg';
@@ -115,7 +114,7 @@ export const CommentsScreen = ({ navigation, route }) => {
               />
               <View style={styles.itemWrapper}>
                 {allComments.map((item, index) => (
-                  <View key={item.id}>
+                  <View key={index}>
                     <View
                       style={
                         index % 2 === 1
@@ -123,7 +122,7 @@ export const CommentsScreen = ({ navigation, route }) => {
                           : styles.commentItem
                       }
                     >
-                      <Image source={avatar} />
+                      <Image source={{ uri: avatar }} style={styles.avatar} />
                       <View
                         style={
                           index % 2 === 1
@@ -206,7 +205,6 @@ const styles = StyleSheet.create({
   },
 
   itemWrapper: {
-    // marginBottom: 28,
     maxHeight: 323,
   },
   commentItem: {
@@ -237,6 +235,11 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 6,
     borderTopLeftRadius: 6,
     borderTopRightRadius: 0,
+  },
+  avatar: {
+    borderRadius: 50,
+    width: 28,
+    height: 28,
   },
   text: {
     fontFamily: 'Roboto-Regular',

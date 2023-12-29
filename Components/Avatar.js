@@ -9,10 +9,9 @@ import { changeAvatarUser } from '../redux/auth/authOperations';
 import { uploadImageToStorage } from '../utils/uploadImageToStorage';
 
 export const Avatar = () => {
-  const dispatch = useDispatch();
   const image = useSelector(selectUserPhoto);
-
   const [avatar, setAvatar] = useState(image);
+  const dispatch = useDispatch();
 
   const handleAddAvatar = async () => {
     const imageFromGallery = await ImagePicker.launchImageLibraryAsync({

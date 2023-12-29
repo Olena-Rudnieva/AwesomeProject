@@ -19,7 +19,7 @@ export const MapScreen = ({ route }) => {
         minZoomLevel={15}
       >
         <Marker
-          title={location.locality}
+          title={location.place}
           coordinate={{
             latitude: location.latitude,
             longitude: location.longitude,

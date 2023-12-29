@@ -20,20 +20,13 @@ import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
 import { db } from '../../firebase/config';
 import { collection, addDoc } from 'firebase/firestore';
-import { getStorage, uploadBytes, ref, getDownloadURL } from 'firebase/storage';
-import {
-  selectUserEmail,
-  selectUserId,
-  selectUserName,
-} from '../../redux/auth/authSelectors';
-import { uploadImageToStorage } from '../../utils/uploadImageToStorage';
+import { selectUserId, selectUserName } from '../../redux/auth/authSelectors';
 
 export const CreatePostsScreen = () => {
   const navigation = useNavigation();
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState('');
   const [place, setPlace] = useState('');
-  const [location, setLocation] = useState('');
   const cameraRef = useRef(null);
   const [hasPermissionCamera, setHasPermissionCamera] = useState(null);
   const [hasPermissionLocation, setHasPermissionLocation] = useState(null);
@@ -44,8 +37,6 @@ export const CreatePostsScreen = () => {
 
   useEffect(() => {
     (async () => {
-      console.log('createPost useEffect');
-
       let cameraPermission = await Camera.requestCameraPermissionsAsync();
       setHasPermissionCamera(cameraPermission.status === 'granted');
 
@@ -103,8 +94,6 @@ export const CreatePostsScreen = () => {
 
   const uploadPost = async () => {
     try {
-      // const image = await uploadPhoto();
-      // const photoURL = await uploadImageToStorage(image, 'images/');
       const {
         coords: { latitude, longitude },
       } = await Location.getCurrentPositionAsync({});
@@ -149,85 +138,9 @@ export const CreatePostsScreen = () => {
     Keyboard.dismiss();
   };
 
-  // const uploadPhoto = async () => {
-  //   try {
-  //     const { status } =
-  //       await ImagePicker.requestMediaLibraryPermissionsAsync();
-  //     if (status === 'granted') {
-  //       const result = await ImagePicker.launchImageLibraryAsync({
-  //         mediaTypes: ImagePicker.MediaTypeOptions.All,
-  //         allowsEditing: true,
-  //         aspect: [4, 3],
-  //         quality: 1,
-  //       });
-  //       if (!result.canceled) {
-  //         setImage(result.assets[0].uri);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log('error', error.message);
-  //   }
-  // };
-
-  // const takePicture = async () => {
-  //   if (cameraRef) {
-  //     try {
-  //       const data = await cameraRef.current.takePictureAsync();
-  //       await MediaLibrary.createAssetAsync(data.uri);
-  //       setImage(data.uri);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  // };
-
-  // const reset = () => {
-  //   setTitle('');
-  //   setPlace('');
-  //   setImage(null);
-  // };
-
-  // const uploadPost = async () => {
-  //   try {
-  //     const image = await uploadPhoto();
-
-  //     await addDoc(collection(db, 'posts'), {
-  //       id,
-  //       name,
-  //       // image,
-  //       title,
-  //       location,
-  //       // coords: coords.coords,
-  //       date: Date.now().toString(),
-  //       // country,
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // const onSubmitForm = async () => {
-  //   if (!image || !title || !place)
-  //     return console.warn('Зробіть або завантажте фото та введіть дані !');
-
-  //   await uploadPost();
-  //   navigation.navigate('PostsScreen');
-  //   reset();
-  // };
-
-  // const deletePost = () => {
-  //   reset();
-  // };
-
   return (
     <TouchableWithoutFeedback onPress={hideKeyboard}>
-      <View
-        style={{
-          ...styles.container,
-          // paddingTop: isKeyboardShown ? 0 : 32,
-          // paddingBottom: isKeyboardShown ? 0 : 34,
-        }}
-      >
+      <View style={styles.container}>
         <View style={styles.wrapper}>
           <View>
             <View style={styles.photo}>
@@ -276,8 +189,8 @@ export const CreatePostsScreen = () => {
                 placeholderTextColor={'#BDBDBD'}
                 value={title}
                 onChangeText={setTitle}
-                // onFocus={keyboardOpen}
-                // onBlur={keyboardHide}
+                onFocus={() => setShowKeyboard(true)}
+                onBlur={() => setShowKeyboard(false)}
               />
               <View style={styles.inputLocation}>
                 <Map
@@ -292,8 +205,8 @@ export const CreatePostsScreen = () => {
                   placeholderTextColor={'#BDBDBD'}
                   value={place}
                   onChangeText={setPlace}
-                  // onFocus={keyboardOpen}
-                  // onBlur={keyboardHide}
+                  onFocus={() => setShowKeyboard(true)}
+                  onBlur={() => setShowKeyboard(false)}
                 />
               </View>
             </View>

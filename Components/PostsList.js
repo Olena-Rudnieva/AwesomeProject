@@ -8,7 +8,6 @@ import {
   FlatList,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
 import Feather from '../assets/svg/feather.svg';
 import Map from '../assets/svg/map.svg';
 
@@ -41,11 +40,11 @@ export const PostsList = ({ posts }) => {
                 <TouchableOpacity
                   onPress={() =>
                     navigation.navigate('MapScreen', {
-                      // location: {
-                      //   locality: item.locality,
-                      //   latitude: item.latitude,
-                      //   longitude: item.longitude,
-                      // },
+                      location: {
+                        place: item.place,
+                        latitude: item.latitude,
+                        longitude: item.longitude,
+                      },
                     })
                   }
                 >
@@ -59,12 +58,6 @@ export const PostsList = ({ posts }) => {
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingBottom: 34 }}
       />
-      {/* <Image
-        source={{
-          uri: 'https://www.zastavki.com/pictures/originals/2023/Nature___Forest_Forest_road_in_the_summer_sun_162796_.jpg',
-        }}
-        style={{ width: 343, height: 'auto' }}
-      />  */}
     </SafeAreaView>
   );
 };
